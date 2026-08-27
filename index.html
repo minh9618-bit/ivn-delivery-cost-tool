@@ -498,6 +498,38 @@
   .cb-item{display:flex;align-items:center;gap:6px;}
   .cb-item b{font-weight:800;}
   .cb-dot{width:9px;height:9px;border-radius:50%;display:inline-block;flex:none;}
+  .copy-summary-row{
+    display:flex;
+    align-items:center;
+    flex-wrap:wrap;
+    gap:10px;
+    margin-top:16px;
+    padding-top:16px;
+    border-top:1px solid var(--border);
+  }
+  .copy-summary-btn{
+    background:#fff;
+    border:1.5px solid var(--imcd-blue);
+    color:var(--imcd-blue);
+    font-weight:700;
+    font-size:13.5px;
+    padding:9px 16px;
+    border-radius:8px;
+    cursor:pointer;
+    transition:background .15s ease, color .15s ease, transform .1s ease;
+    flex:none;
+  }
+  .copy-summary-btn:hover{background:var(--imcd-blue);color:#fff;}
+  .copy-summary-btn:active{transform:scale(0.97);}
+  .copy-summary-btn.copied{
+    background:var(--green);
+    border-color:var(--green);
+    color:#fff;
+  }
+  .copy-summary-hint{
+    font-size:11.5px;
+    color:var(--muted);
+  }
 
   /* ---------- Footer ---------- */
   footer{
@@ -551,8 +583,13 @@
     align-items:center;
     justify-content:center;
     padding:20px;
+    transition:opacity .5s ease, transform .5s ease;
   }
-  #gateOverlay.hidden{display:none;}
+  #gateOverlay.hidden{
+    opacity:0;
+    transform:scale(1.03);
+    pointer-events:none;
+  }
   .gate-box{
     background:rgba(255,255,255,0.16);
     backdrop-filter:blur(22px) saturate(160%);
@@ -616,8 +653,18 @@
     margin-top:10px;
     min-height:16px;
   }
-  #appRoot{display:none;}
-  #appRoot.unlocked{display:block;}
+  #appRoot{display:none;opacity:1;transform:translateY(0);}
+  #appRoot.unlocking{
+    display:block;
+    opacity:0;
+    transform:translateY(10px);
+    transition:opacity .55s ease, transform .55s ease;
+  }
+  #appRoot.unlocked{
+    display:block;
+    opacity:1;
+    transform:translateY(0);
+  }
 
   /* ---------- Newpost badge/note inside unified results list ---------- */
   .tag.newpost{background:#5b3a99; color:#fff;}
@@ -655,7 +702,7 @@
   <div class="titles">
     <h1 data-i18n="appTitle">Công cụ tính giá vận chuyển <span class="version-tag">v1.0</span></h1>
   </div>
-  <div class="badge-internal">Internal use only</div>
+  <div class="badge-internal">Internal Use</div>
   <div class="lang-toggle" id="langToggle">
     <button type="button" class="lang-btn active" data-lang="vi">VI</button>
     <button type="button" class="lang-btn" data-lang="en">EN</button>
@@ -771,6 +818,11 @@
         <span class="cb-item"><i class="cb-dot cb-gp2" id="cbGp2Dot"></i><span data-i18n="cbGp2">GP2 (lợi nhuận)</span> <b id="cbGp2Pct">0.0%</b></span>
       </div>
     </div>
+
+    <div class="copy-summary-row">
+      <button type="button" id="copySummaryBtn" class="copy-summary-btn">📋 <span data-i18n="copySummaryBtn">Copy kết quả</span></button>
+      <span class="copy-summary-hint" data-i18n="copySummaryHint">Tóm tắt ngắn gọn để xin duyệt đơn hàng qua Zalo/email</span>
+    </div>
   </div>
 
 </div>
@@ -799,12 +851,30 @@
   const submitBtn = document.getElementById('gateSubmit');
   const errorEl = document.getElementById('gateError');
 
+  function showAppInstant(){
+    overlay.style.display = 'none';
+    appRoot.classList.add('unlocked');
+  }
+
+  function showAppAnimated(){
+    overlay.classList.add('hidden');
+    appRoot.classList.add('unlocking');
+    requestAnimationFrame(function(){
+      requestAnimationFrame(function(){
+        appRoot.classList.add('unlocked');
+      });
+    });
+    overlay.addEventListener('transitionend', function handler(){
+      overlay.style.display = 'none';
+      overlay.removeEventListener('transitionend', handler);
+    }, {once:true});
+  }
+
   function tryUnlock(){
     const val = pwInput.value || '';
     if(hashStr(val) === PASS_HASH){
       sessionStorage.setItem('imcd_shipping_tool_unlocked', '1');
-      overlay.classList.add('hidden');
-      appRoot.classList.add('unlocked');
+      showAppAnimated();
       errorEl.textContent = '';
     } else {
       errorEl.textContent = 'Sai mật khẩu, vui lòng thử lại.';
@@ -814,8 +884,7 @@
   }
 
   if(sessionStorage.getItem('imcd_shipping_tool_unlocked') === '1'){
-    overlay.classList.add('hidden');
-    appRoot.classList.add('unlocked');
+    showAppInstant();
   } else {
     pwInput.focus();
   }
@@ -864,7 +933,17 @@ const translations = {
     cbTitle: 'Cơ cấu doanh thu',
     cbCogs: 'Giá vốn',
     cbShip: 'Chi phí vận chuyển',
-    cbGp2: 'GP2 (lợi nhuận)'
+    cbGp2: 'GP2 (lợi nhuận)',
+    copySummaryBtn: 'Copy kết quả',
+    copySummaryHint: 'Tóm tắt ngắn gọn để xin duyệt đơn hàng qua Zalo/email',
+    copySummaryCopied: 'Đã copy ✓',
+    summaryTitle: 'YÊU CẦU DUYỆT ĐƠN HÀNG',
+    summaryRoute: 'Tuyến',
+    summaryQty: 'Khối lượng',
+    summaryDelivery: 'Chi phí vận chuyển',
+    summaryCost: 'Giá vốn',
+    summaryPrice: 'Giá bán',
+    summaryLowMargin: 'Biên lợi nhuận thấp, cần xem xét'
   },
   en: {
     appTitle: 'Shipping Cost Estimation Tool',
@@ -902,10 +981,21 @@ const translations = {
     cbTitle: 'Revenue breakdown',
     cbCogs: 'Unit cost',
     cbShip: 'Shipping cost',
-    cbGp2: 'GP2 (profit)'
+    cbGp2: 'GP2 (profit)',
+    copySummaryBtn: 'Copy summary',
+    copySummaryHint: 'Short summary to send via Zalo/email for order approval',
+    copySummaryCopied: 'Copied ✓',
+    summaryTitle: 'ORDER APPROVAL REQUEST',
+    summaryRoute: 'Route',
+    summaryQty: 'Weight',
+    summaryDelivery: 'Shipping cost',
+    summaryCost: 'Unit cost',
+    summaryPrice: 'Unit price',
+    summaryLowMargin: 'Low margin, please review'
   }
 };
 let currentLang = 'vi';
+let lastSelectedOption = null;
 try { currentLang = localStorage.getItem('appLang') || 'vi'; } catch(e){}
 
 function t(key){
@@ -1202,6 +1292,7 @@ function resetResults(){
   resultsList.style.display = 'none';
   resultsList.innerHTML = '';
   calcNote.style.display = 'none';
+  lastSelectedOption = null;
 }
 
 function showMsg(text){
@@ -1317,8 +1408,10 @@ function renderResults(options, qty){
 
   document.querySelectorAll('.select-btn').forEach(btn => {
     btn.addEventListener('click', () => {
+      if(navigator.vibrate){ navigator.vibrate(15); }
       const idx = parseInt(btn.dataset.idx, 10);
       const opt = options[idx];
+      lastSelectedOption = opt;
       const deliveryCostInput = document.getElementById('deliveryCostInput');
       deliveryCostInput.value = fmtNum(opt.cost);
       document.querySelectorAll('.option-card').forEach(c => c.classList.remove('selected'));
@@ -1442,6 +1535,78 @@ function recalcGP(){
   document.getElementById('cbCogsPct').textContent = fmtPct(cogsPct);
   document.getElementById('cbShipPct').textContent = fmtPct(shipPct);
   document.getElementById('cbGp2Pct').textContent = fmtPct(gp2pct);
+}
+
+function buildSummaryText(){
+  const qty = parseFormattedNumber(qtyInput.value);
+  const unitCost = parseFormattedNumber(unitCostInput.value);
+  const unitPrice = parseFormattedNumber(unitPriceInput.value);
+  const delivery = parseFormattedNumber(deliveryCostInput.value);
+  const revenue = qty * unitPrice;
+  const cogs = qty * unitCost;
+  const gp1 = revenue - cogs;
+  const gp1pct = revenue > 0 ? (gp1/revenue*100) : 0;
+  const gp2 = gp1 - delivery;
+  const gp2pct = revenue > 0 ? (gp2/revenue*100) : 0;
+
+  const lines = [];
+  lines.push(t('summaryTitle'));
+
+  if(lastSelectedOption){
+    const opt = lastSelectedOption;
+    let routeLine;
+    if(opt.isNewpost){
+      routeLine = `Newpost - ${opt.npZoneLabel} (${opt.row.state}${opt.npDistrict ? ', ' + opt.npDistrict : ''})`;
+    } else if(opt.isTnPartial){
+      routeLine = `Thống Nhất (chặng 1) - ${opt.row.state}`;
+    } else {
+      routeLine = `${opt.row.wh} - ${opt.row.state}, ${opt.row.city} (${opt.row.vendor})`;
+    }
+    lines.push(`${t('summaryRoute')}: ${routeLine}`);
+  }
+
+  lines.push(`${t('summaryQty')}: ${fmtQty(qty)} kg`);
+  lines.push(`${t('summaryCost')}: ${fmtVND(unitCost)}/kg  |  ${t('summaryPrice')}: ${fmtVND(unitPrice)}/kg`);
+  lines.push(`${t('summaryDelivery')}: ${fmtVND(delivery)}`);
+  lines.push(`GP1: ${fmtVND(gp1)} (${fmtPct(gp1pct)})`);
+  lines.push(`GP2: ${fmtVND(gp2)} (${fmtPct(gp2pct)})${(gp1 < 4000000 || gp2 < 0) ? ' ⚠️ ' + t('summaryLowMargin') : ''}`);
+
+  return lines.join('\n');
+}
+
+const copySummaryBtn = document.getElementById('copySummaryBtn');
+copySummaryBtn.addEventListener('click', () => {
+  const text = buildSummaryText();
+  const showCopied = () => {
+    if(navigator.vibrate){ navigator.vibrate(15); }
+    const original = `📋 ${t('copySummaryBtn')}`;
+    copySummaryBtn.classList.add('copied');
+    copySummaryBtn.innerHTML = `✓ ${t('copySummaryCopied')}`;
+    setTimeout(() => {
+      copySummaryBtn.classList.remove('copied');
+      copySummaryBtn.innerHTML = `📋 <span data-i18n="copySummaryBtn">${t('copySummaryBtn')}</span>`;
+    }, 1500);
+  };
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(text).then(showCopied).catch(() => {
+      fallbackCopy(text, showCopied);
+    });
+  } else {
+    fallbackCopy(text, showCopied);
+  }
+});
+
+function fallbackCopy(text, cb){
+  const ta = document.createElement('textarea');
+  ta.value = text;
+  ta.style.position = 'fixed';
+  ta.style.opacity = '0';
+  document.body.appendChild(ta);
+  ta.focus();
+  ta.select();
+  try { document.execCommand('copy'); } catch(e){}
+  document.body.removeChild(ta);
+  cb();
 }
 
 [qtyInput, unitCostInput, unitPriceInput, deliveryCostInput].forEach(el => {
