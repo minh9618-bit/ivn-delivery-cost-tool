@@ -1420,7 +1420,7 @@ function renderResults(options, qty){
       btn.classList.add('is-selected');
       btn.textContent = 'Đã chọn ✓';
       recalcGP();
-      document.getElementById('gp2Box').scrollIntoView({behavior:'smooth', block:'center'});
+      document.getElementById('copySummaryBtn').scrollIntoView({behavior:'smooth', block:'end'});
     });
   });
 }
@@ -1575,16 +1575,18 @@ function buildSummaryText(){
 }
 
 const copySummaryBtn = document.getElementById('copySummaryBtn');
+let copySummaryTimeoutId = null;
 copySummaryBtn.addEventListener('click', () => {
   const text = buildSummaryText();
   const showCopied = () => {
     if(navigator.vibrate){ navigator.vibrate(15); }
-    const original = `📋 ${t('copySummaryBtn')}`;
+    if(copySummaryTimeoutId){ clearTimeout(copySummaryTimeoutId); }
     copySummaryBtn.classList.add('copied');
     copySummaryBtn.innerHTML = `✓ ${t('copySummaryCopied')}`;
-    setTimeout(() => {
+    copySummaryTimeoutId = setTimeout(() => {
       copySummaryBtn.classList.remove('copied');
       copySummaryBtn.innerHTML = `📋 <span data-i18n="copySummaryBtn">${t('copySummaryBtn')}</span>`;
+      copySummaryTimeoutId = null;
     }, 1500);
   };
   if(navigator.clipboard && navigator.clipboard.writeText){
