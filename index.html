@@ -50,7 +50,7 @@
     background-position:center;
     background-repeat:no-repeat;
     color:#fff;
-    padding:14px 28px;
+    padding:18px 28px;
     display:flex;
     align-items:center;
     gap:18px;
@@ -168,18 +168,18 @@
   .wrap{
     max-width:920px;
     margin:0 auto;
-    padding:26px 20px 60px;
+    padding:36px 20px 60px;
   }
   .card{
     background:var(--card);
     border:1px solid var(--border);
     border-radius:14px;
-    padding:22px 24px;
-    margin-bottom:22px;
+    padding:26px 26px;
+    margin-bottom:26px;
     box-shadow:0 4px 24px rgba(20,45,106,0.08);
   }
   .card h2{
-    margin:0 0 4px;
+    margin:0 0 10px;
     font-size:16px;
     color:var(--navy-dark);
     display:flex;
@@ -199,7 +199,7 @@
     flex:none;
   }
   .card .sub{
-    margin:0 0 18px;
+    margin:0 0 24px;
     font-size:12.5px;
     color:var(--muted);
   }
@@ -257,6 +257,15 @@
     font-size:11px;
     color:var(--muted);
     margin-top:5px;
+  }
+  .field .hint-bulky{
+    font-size:11.5px;
+    color:var(--amber);
+    background:var(--amber-bg);
+    border-radius:6px;
+    padding:6px 9px;
+    margin-top:6px;
+    line-height:1.4;
   }
   .actions{
     margin-top:18px;
@@ -457,10 +466,95 @@
   .gp-box.negative .val, .gp-box.negative .pct{color:var(--danger);}
   .gp-box .pct.low{color:var(--danger);}
   .gp-note{
-    font-size:11.5px;
+    font-size:12px;
     color:var(--muted);
     margin-top:14px;
+    line-height:1.7;
   }
+  .gp-alerts{
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+    margin-top:14px;
+  }
+  .gp-alert{
+    display:flex;
+    align-items:flex-start;
+    gap:8px;
+    background:var(--danger-bg);
+    border:1px solid var(--danger);
+    color:var(--danger-deep);
+    border-radius:9px;
+    padding:11px 14px;
+    font-family:inherit;
+    font-size:13.5px;
+    font-weight:700;
+    line-height:1.5;
+  }
+  .gp-alert .ic{font-size:16px;flex:none;line-height:1;}
+  .gp-target-box{
+    margin-top:20px;
+    padding-top:18px;
+    border-top:1px solid var(--border);
+  }
+  .gp-target-title{
+    font-size:13.5px;
+    font-weight:700;
+    color:var(--navy-dark);
+    margin-bottom:3px;
+  }
+  .gp-target-sub{
+    font-size:12.5px;
+    color:var(--muted);
+    margin-bottom:12px;
+  }
+  .gp-target-row{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:12px;
+    align-items:end;
+  }
+  @media(max-width:600px){
+    .gp-target-row{grid-template-columns:1fr;}
+  }
+  .gp-target-result{
+    background:var(--green-bg);
+    border:1px solid #cdeadf;
+    border-radius:10px;
+    padding:10px 14px;
+  }
+  .gp-target-result .lbl{
+    font-size:11px;
+    font-weight:700;
+    text-transform:uppercase;
+    letter-spacing:0.4px;
+    color:var(--muted);
+    margin-bottom:4px;
+  }
+  .gp-target-result .val{
+    font-size:16.5px;
+    font-weight:800;
+    color:var(--green);
+  }
+  .gp-target-apply{
+    margin-top:8px;
+    background:#fff;
+    border:1.5px solid var(--navy);
+    color:var(--navy);
+    font-size:12px;
+    font-weight:700;
+    padding:5px 10px;
+    border-radius:7px;
+    cursor:pointer;
+  }
+  .gp-target-apply:hover{background:var(--navy);color:#fff;}
+  .gp-target-note{
+    font-size:11.5px;
+    color:var(--muted);
+    margin-top:10px;
+    line-height:1.4;
+  }
+  .gp-target-note.warn{color:var(--danger);font-weight:700;}
   .cost-breakdown{
     margin-top:18px;
     padding-top:16px;
@@ -521,6 +615,27 @@
   }
   .copy-summary-btn:hover{background:var(--imcd-blue);color:#fff;}
   .copy-summary-btn:active{transform:scale(0.97);}
+  .refresh-row{
+    display:flex;
+    align-items:center;
+    flex-wrap:wrap;
+    gap:10px;
+    margin-top:12px;
+  }
+  .refresh-btn{
+    background:#fff;
+    border:1.5px solid var(--border);
+    color:var(--muted);
+    font-weight:700;
+    font-size:13.5px;
+    padding:9px 16px;
+    border-radius:8px;
+    cursor:pointer;
+    transition:background .15s ease, color .15s ease, border-color .15s ease, transform .1s ease;
+    flex:none;
+  }
+  .refresh-btn:hover{background:#f2f4f8;border-color:#cdd4e0;color:var(--text);}
+  .refresh-btn:active{transform:scale(0.97);}
   .copy-summary-btn.copied{
     background:var(--green);
     border-color:var(--green);
@@ -714,7 +829,7 @@
   <!-- STEP 1 -->
   <div class="card">
     <h2><span class="step-num">1</span> <span data-i18n="step1Title">Nhập tuyến hàng</span></h2>
-    <p class="sub" data-i18n="step1Sub">Chọn kho xuất, điểm đến và khối lượng để xem các phương án vận chuyển khả dụng (bao gồm cả Newpost cho hàng nhỏ lẻ ≥10kg).</p>
+    <p class="sub" data-i18n="step1Sub">Chọn kho xuất, điểm đến và khối lượng để xem các phương án vận chuyển khả dụng.</p>
 
     <div class="form-grid">
       <div class="field">
@@ -741,6 +856,7 @@
         <label for="qtyInput" data-i18n="lblQty">Khối lượng / Số lượng (kg)</label>
         <input type="text" inputmode="decimal" id="qtyInput" placeholder="VD: 500" data-i18n-placeholder="phQty">
         <div class="hint" data-i18n="hintQty">* Giá trị này cũng dùng làm Số lượng ở Bước 2</div>
+        <div class="hint-bulky" data-i18n="hintBulky">📦 Nếu là hàng cồng kềnh, vui lòng lấy Khối lượng × 2 hoặc × 3 trước khi nhập, hoặc liên hệ CS để có giá vận chuyển chính xác nhất.</div>
       </div>
     </div>
 
@@ -803,7 +919,29 @@
         <div class="val" id="outDeliveryPerUnit">0 ₫</div>
       </div>
     </div>
-    <p class="gp-note" data-i18n="gpFormula">GP1 = (Giá bán − Giá vốn) × Số lượng &nbsp;·&nbsp; GP2 = GP1 − Tổng chi phí vận chuyển</p>
+    <p class="gp-note" data-i18n="gpFormula">· GP1 = (Giá bán − Giá vốn) × Số lượng<br>· GP2 = GP1 − Tổng chi phí vận chuyển</p>
+
+    <div class="gp-alerts">
+      <div class="gp-alert" id="alertLowMargin" style="display:none;"><span class="ic">⚠️</span><span data-i18n="warnLowMargin">GP thấp hơn mức tối thiểu cho phép, cần điều chỉnh giá bán/số lượng hoặc xin approve trước khi báo giá.</span></div>
+      <div class="gp-alert" id="alertShipHigh" style="display:none;"><span class="ic">⚠️</span><span id="alertShipHighText"></span></div>
+    </div>
+
+    <div class="gp-target-box">
+      <div class="gp-target-title" data-i18n="targetTitle">🎯 Đề xuất giá bán tối ưu theo GP2% mong muốn</div>
+      <div class="gp-target-sub" data-i18n="targetSub">Nhập GP2% mong muốn để tính ngược ra giá bán đề xuất, dựa trên Khối lượng và Chi phí vận chuyển hiện tại ở trên.</div>
+      <div class="gp-target-row">
+        <div class="field">
+          <label for="targetGp2Input" data-i18n="lblTargetGp2">GP2% mong muốn</label>
+          <input type="text" inputmode="decimal" id="targetGp2Input" placeholder="VD: 12" data-i18n-placeholder="phTargetGp2">
+        </div>
+        <div class="gp-target-result">
+          <div class="lbl" data-i18n="lblSuggestedPrice">Giá bán đề xuất / đơn vị</div>
+          <div class="val" id="outSuggestedPrice">—</div>
+          <button type="button" class="gp-target-apply" id="applySuggestedPriceBtn" style="display:none;" data-i18n="applyPriceBtn">Áp dụng giá này ⬇</button>
+        </div>
+      </div>
+      <div class="gp-target-note" id="targetGp2Note"></div>
+    </div>
 
     <div class="cost-breakdown">
       <div class="cb-title" data-i18n="cbTitle">Cơ cấu doanh thu</div>
@@ -822,6 +960,10 @@
     <div class="copy-summary-row">
       <button type="button" id="copySummaryBtn" class="copy-summary-btn">📋 <span data-i18n="copySummaryBtn">Copy kết quả</span></button>
       <span class="copy-summary-hint" data-i18n="copySummaryHint">Tóm tắt ngắn gọn để xin duyệt đơn hàng qua Zalo/email</span>
+    </div>
+    <div class="refresh-row">
+      <button type="button" id="refreshBtn" class="refresh-btn">🔄 <span data-i18n="refreshBtn">Làm mới</span></button>
+      <span class="copy-summary-hint" data-i18n="refreshHint">Xóa toàn bộ thông tin đã nhập và quay về đầu trang</span>
     </div>
   </div>
 
@@ -900,7 +1042,7 @@ const translations = {
   vi: {
     appTitle: 'Công cụ tính giá vận chuyển',
     step1Title: 'Nhập tuyến hàng',
-    step1Sub: 'Chọn kho xuất, điểm đến và khối lượng để xem các phương án vận chuyển khả dụng (bao gồm cả Newpost cho hàng nhỏ lẻ ≥10kg).',
+    step1Sub: 'Chọn kho xuất, điểm đến và khối lượng để xem các phương án vận chuyển khả dụng.',
     lblWarehouse: 'Kho xuất',
     optAllWh: 'Tất cả kho (so sánh)',
     optWhFM: 'Kho FM (Miền Bắc)',
@@ -929,7 +1071,7 @@ const translations = {
     lblGP1: 'GP1 (trước vận chuyển)',
     lblGP2: 'GP2 (sau vận chuyển)',
     lblDeliveryPerUnit: 'Chi phí vận chuyển / đơn vị',
-    gpFormula: 'GP1 = (Giá bán − Giá vốn) × Số lượng &nbsp;·&nbsp; GP2 = GP1 − Tổng chi phí vận chuyển',
+    gpFormula: '· GP1 = (Giá bán − Giá vốn) × Số lượng<br>· GP2 = GP1 − Tổng chi phí vận chuyển',
     cbTitle: 'Cơ cấu doanh thu',
     cbCogs: 'Giá vốn',
     cbShip: 'Chi phí vận chuyển',
@@ -943,12 +1085,25 @@ const translations = {
     summaryDelivery: 'Chi phí vận chuyển',
     summaryCost: 'Giá vốn',
     summaryPrice: 'Giá bán',
-    summaryLowMargin: 'Biên lợi nhuận thấp, cần xem xét'
+    summaryLowMargin: 'Biên lợi nhuận thấp, cần xem xét',
+    hintBulky: '📦 Nếu là hàng cồng kềnh, vui lòng lấy Khối lượng × 2 hoặc × 3 trước khi nhập, hoặc liên hệ CS để có giá vận chuyển chính xác nhất.',
+    warnLowMargin: 'GP thấp hơn mức tối thiểu cho phép, cần điều chỉnh giá bán/số lượng hoặc xin approve trước khi báo giá.',
+    targetTitle: '🎯 Đề xuất giá bán tối ưu theo GP2% mong muốn',
+    targetSub: 'Nhập GP2% mong muốn để tính ngược ra giá bán đề xuất, dựa trên Khối lượng và Chi phí vận chuyển hiện tại ở trên.',
+    lblTargetGp2: 'GP2% mong muốn',
+    phTargetGp2: 'VD: 12',
+    lblSuggestedPrice: 'Giá bán đề xuất / đơn vị',
+    applyPriceBtn: 'Áp dụng giá này ⬇',
+    targetNoteOk: 'Với giá bán này, GP2% đạt đúng {pct}% như mong muốn (giả định Cước VC không đổi bậc so với Khối lượng hiện tại).',
+    targetNoteInvalid: 'Không thể tính: vui lòng nhập Khối lượng, Giá vốn ở Bước 1/2 và GP2% mong muốn nhỏ hơn 100%.',
+    targetNoteBelowCost: 'Kết quả giá bán thấp hơn giá vốn - kiểm tra lại GP2% mong muốn hoặc Chi phí vận chuyển.',
+    refreshBtn: 'Làm mới',
+    refreshHint: 'Xóa toàn bộ thông tin đã nhập và quay về đầu trang'
   },
   en: {
     appTitle: 'Shipping Cost Estimation Tool',
     step1Title: 'Enter shipment details',
-    step1Sub: 'Select the origin warehouse, destination and weight to see available shipping options (including Newpost for small parcels ≥10kg).',
+    step1Sub: 'Select the origin warehouse, destination and weight to see available shipping options.',
     lblWarehouse: 'Origin warehouse',
     optAllWh: 'All warehouses (compare)',
     optWhFM: 'Warehouse FM (North)',
@@ -977,7 +1132,7 @@ const translations = {
     lblGP1: 'GP1 (before shipping)',
     lblGP2: 'GP2 (after shipping)',
     lblDeliveryPerUnit: 'Shipping cost / unit',
-    gpFormula: 'GP1 = (Unit price − Unit cost) × Quantity &nbsp;·&nbsp; GP2 = GP1 − Total shipping cost',
+    gpFormula: '· GP1 = (Unit price − Unit cost) × Quantity<br>· GP2 = GP1 − Total shipping cost',
     cbTitle: 'Revenue breakdown',
     cbCogs: 'Unit cost',
     cbShip: 'Shipping cost',
@@ -991,7 +1146,20 @@ const translations = {
     summaryDelivery: 'Shipping cost',
     summaryCost: 'Unit cost',
     summaryPrice: 'Unit price',
-    summaryLowMargin: 'Low margin, please review'
+    summaryLowMargin: 'Low margin, please review',
+    hintBulky: '📦 For bulky/oversized goods, please multiply the Weight by 2 or 3 before entering it, or contact CS for the most accurate shipping quote.',
+    warnLowMargin: 'GP is below the minimum allowed threshold - adjust the unit price/quantity or get approval before quoting.',
+    targetTitle: '🎯 Suggested optimal price based on target GP2%',
+    targetSub: 'Enter your target GP2% to back-calculate a suggested unit price, based on the current Weight and Shipping cost above.',
+    lblTargetGp2: 'Target GP2%',
+    phTargetGp2: 'e.g. 12',
+    lblSuggestedPrice: 'Suggested unit price',
+    applyPriceBtn: 'Apply this price ⬇',
+    targetNoteOk: 'At this price, GP2% reaches exactly {pct}% as targeted (assumes the shipping cost bracket stays the same as the current Weight).',
+    targetNoteInvalid: 'Cannot calculate: please enter Weight, Unit cost in Step 1/2, and a target GP2% below 100%.',
+    targetNoteBelowCost: 'The resulting price is below unit cost - please review the target GP2% or the shipping cost.',
+    refreshBtn: 'Refresh',
+    refreshHint: 'Clear all entered information and go back to the top'
   }
 };
 let currentLang = 'vi';
@@ -1017,6 +1185,7 @@ function applyLanguage(lang){
   if(typeof populateProvinces === 'function') populateProvinces();
   if(typeof resetResults === 'function' && resultsList && resultsList.style.display === 'none') resetResults();
   if(typeof tryAutoCalculate === 'function') tryAutoCalculate();
+  try { if(typeof recalcGP === 'function') recalcGP(); } catch(e){ /* GP calculator not initialized yet on first load */ }
 }
 
 document.getElementById('langToggle').addEventListener('click', function(e){
@@ -1135,7 +1304,7 @@ function computeGiapBatPartialOption(wh, province, qty){
 
   const tierIdx = tnWeightTierIndex(qty);
   const rate = GIAP_BAT_LEG1_RATES[tierIdx];
-  const pallets = Math.ceil(qty/1000);
+  const pallets = Math.ceil(qty/800);
   let surcharge = 150000*pallets;
   if(qty < 1000) surcharge += 500000;
   const cost = (qty*rate*1.2) + surcharge;
@@ -1273,17 +1442,18 @@ function computeCost(row, qty, bracketIdx){
     // (e.g. Tuyên Quang chỉ nhận đơn hàng từ 1 tấn trở lên) - no quote available.
     if(rawPrice === null || rawPrice === undefined) return null;
     // Cước = (Trọng lượng × Đơn giá × Hệ số xăng dầu) + Phụ phí.
-    // Phụ phí = 500,000đ/chuyến nếu <1 tấn + 150,000đ/pallet (ước tính 1 tấn/pallet, làm tròn lên) - KHÔNG nhân hệ số xăng dầu.
+    // Phụ phí = 500,000đ/chuyến nếu <1 tấn + 150,000đ/pallet (ước tính 800kg/pallet, làm tròn lên) - KHÔNG nhân hệ số xăng dầu.
     // Hệ số xăng dầu hiện tại: ×1.2 (theo báo giá gốc, xác nhận với Logistics nếu thay đổi).
-    const pallets = Math.ceil(qty/1000);
+    const pallets = Math.ceil(qty/800);
     let surcharge = 150000*pallets;
     if(qty < 1000) surcharge += 500000;
     return (qty*rawPrice*1.2) + surcharge;
   }
-  // Trucking: a 0 lump price genuinely means no quote for this weight bracket.
+  // Trucking (NPT/Navitrans/ITL): giá trong bảng đã là giá giao tới khách hàng cuối cùng,
+  // không cần nhân thêm hệ số ước tính. 0 nghĩa là chưa có báo giá cho mức cân này.
   const price = rawPrice || 0;
   if(price <= 0) return null;
-  return price * 1.4;
+  return price;
 }
 
 function resetResults(){
@@ -1516,15 +1686,34 @@ function recalcGP(){
   document.getElementById('outRevenue').textContent = fmtVND(revenue);
   document.getElementById('outGP1').textContent = fmtVND(gp1);
   document.getElementById('outGP1pct').textContent = fmtPct(gp1pct);
-  document.getElementById('outGP1pct').classList.toggle('low', gp1pct < 7);
+  document.getElementById('outGP1pct').classList.toggle('low', gp1pct <= 7);
   document.getElementById('outGP2').textContent = fmtVND(gp2);
   document.getElementById('outGP2pct').textContent = fmtPct(gp2pct);
-  const gp1IsLow = gp1 < 4000000;
-  document.getElementById('outGP2pct').classList.toggle('low', gp2pct < 7 || gp1IsLow);
+  const hasInput = revenue > 0;
+  const gp1IsLowAbs = hasInput && gp1 < 4000000;
+  const isLowMarginPct = hasInput && (gp1pct <= 7 || gp2pct <= 7);
+  const isLowMargin = isLowMarginPct || gp1IsLowAbs;
+  document.getElementById('outGP2pct').classList.toggle('low', gp2pct <= 7 || gp1IsLowAbs);
   document.getElementById('outDeliveryPerUnit').textContent = fmtVND(deliveryPerUnit);
 
-  document.getElementById('gp1Box').classList.toggle('negative', gp1IsLow);
-  document.getElementById('gp2Box').classList.toggle('negative', gp2 < 0 || gp1IsLow);
+  document.getElementById('gp1Box').classList.toggle('negative', isLowMargin);
+  document.getElementById('gp2Box').classList.toggle('negative', gp2 < 0 || isLowMargin);
+
+  const alertLowMarginEl = document.getElementById('alertLowMargin');
+  alertLowMarginEl.style.display = isLowMargin ? 'flex' : 'none';
+
+  const shipOverGp1 = gp1 > 0 && delivery > 0.2 * gp1;
+  const alertShipHighEl = document.getElementById('alertShipHigh');
+  if(shipOverGp1){
+    const shipOfGp1Pct = (delivery / gp1 * 100);
+    const msg = currentLang === 'vi'
+      ? `Chi phí vận chuyển đang chiếm ${shipOfGp1Pct.toFixed(1)}% GP1 (vượt ngưỡng cho phép 20.0%), cần cân nhắc ghép đơn hoặc điều chỉnh giá bán.`
+      : `Shipping cost is ${shipOfGp1Pct.toFixed(1)}% of GP1 (above the 20.0% threshold) - consider consolidating orders or adjusting the price.`;
+    document.getElementById('alertShipHighText').textContent = msg;
+    alertShipHighEl.style.display = 'flex';
+  } else {
+    alertShipHighEl.style.display = 'none';
+  }
 
   const cogsPct = revenue > 0 ? (cogs/revenue*100) : 0;
   const shipPct = revenue > 0 ? (delivery/revenue*100) : 0;
@@ -1536,7 +1725,66 @@ function recalcGP(){
   document.getElementById('cbCogsPct').textContent = fmtPct(cogsPct);
   document.getElementById('cbShipPct').textContent = fmtPct(shipPct);
   document.getElementById('cbGp2Pct').textContent = fmtPct(gp2pct);
+
+  recalcSuggestedPrice();
 }
+
+/* ---------- Suggested optimal price (reverse-calc from target GP2%) ---------- */
+const targetGp2Input = document.getElementById('targetGp2Input');
+const outSuggestedPrice = document.getElementById('outSuggestedPrice');
+const applySuggestedPriceBtn = document.getElementById('applySuggestedPriceBtn');
+const targetGp2Note = document.getElementById('targetGp2Note');
+let lastSuggestedPrice = null;
+
+function recalcSuggestedPrice(){
+  const qty = parseFormattedNumber(qtyInput.value);
+  const unitCost = parseFormattedNumber(unitCostInput.value);
+  const delivery = parseFormattedNumber(deliveryCostInput.value);
+  const targetPctRaw = String(targetGp2Input.value || '').replace(',', '.').trim();
+  const targetPct = parseFloat(targetPctRaw);
+
+  lastSuggestedPrice = null;
+  applySuggestedPriceBtn.style.display = 'none';
+  targetGp2Note.classList.remove('warn');
+
+  if(targetPctRaw === '' || isNaN(targetPct)){
+    outSuggestedPrice.textContent = '—';
+    targetGp2Note.textContent = '';
+    return;
+  }
+
+  // Giá bán = (Giá vốn × KL + Cước VC) / (KL × (1 − GP2%))
+  const denom = qty * (1 - targetPct / 100);
+  if(qty <= 0 || unitCost < 0 || targetPct >= 100 || denom <= 0){
+    outSuggestedPrice.textContent = '—';
+    targetGp2Note.textContent = t('targetNoteInvalid');
+    targetGp2Note.classList.add('warn');
+    return;
+  }
+
+  const suggestedPrice = (unitCost * qty + delivery) / denom;
+  outSuggestedPrice.textContent = fmtVND(suggestedPrice) + '/kg';
+  lastSuggestedPrice = suggestedPrice;
+  applySuggestedPriceBtn.style.display = 'inline-block';
+
+  if(suggestedPrice < unitCost){
+    targetGp2Note.textContent = t('targetNoteBelowCost');
+    targetGp2Note.classList.add('warn');
+  } else {
+    targetGp2Note.textContent = t('targetNoteOk').replace('{pct}', targetPct.toString());
+  }
+}
+
+targetGp2Input.addEventListener('input', recalcSuggestedPrice);
+
+applySuggestedPriceBtn.addEventListener('click', () => {
+  if(lastSuggestedPrice == null) return;
+  unitPriceInput.value = Math.round(lastSuggestedPrice).toString();
+  // Trigger the thousands-separator formatter attached to this input, then recalc.
+  unitPriceInput.dispatchEvent(new Event('input', { bubbles: true }));
+  recalcGP();
+  if(navigator.vibrate){ navigator.vibrate(15); }
+});
 
 function buildSummaryText(){
   const qty = parseFormattedNumber(qtyInput.value);
@@ -1569,8 +1817,15 @@ function buildSummaryText(){
   lines.push(`${t('summaryQty')}: ${fmtQty(qty)} kg`);
   lines.push(`${t('summaryCost')}: ${fmtVND(unitCost)}/kg  |  ${t('summaryPrice')}: ${fmtVND(unitPrice)}/kg`);
   lines.push(`${t('summaryDelivery')}: ${fmtVND(delivery)}`);
+  const isLowMargin = revenue > 0 && (gp1pct <= 7 || gp2pct <= 7 || gp1 < 4000000);
   lines.push(`GP1: ${fmtVND(gp1)} (${fmtPct(gp1pct)})`);
-  lines.push(`GP2: ${fmtVND(gp2)} (${fmtPct(gp2pct)})${(gp1 < 4000000 || gp2 < 0) ? ' ⚠️ ' + t('summaryLowMargin') : ''}`);
+  lines.push(`GP2: ${fmtVND(gp2)} (${fmtPct(gp2pct)})${(isLowMargin || gp2 < 0) ? ' ⚠️ ' + t('summaryLowMargin') : ''}`);
+  if(gp1 > 0 && delivery > 0.2 * gp1){
+    const shipOfGp1Pct = (delivery / gp1 * 100).toFixed(1);
+    lines.push(currentLang === 'vi'
+      ? `⚠️ Chi phí vận chuyển chiếm ${shipOfGp1Pct}% GP1 (vượt ngưỡng 20.0%)`
+      : `⚠️ Shipping cost is ${shipOfGp1Pct}% of GP1 (above the 20.0% threshold)`);
+  }
 
   return lines.join('\n');
 }
@@ -1611,6 +1866,22 @@ function fallbackCopy(text, cb){
   document.body.removeChild(ta);
   cb();
 }
+
+const refreshBtn = document.getElementById('refreshBtn');
+refreshBtn.addEventListener('click', () => {
+  whSelect.value = 'all';
+  populateProvinces();
+  showMsg('');
+  resetResults();
+
+  [qtyInput, unitCostInput, unitPriceInput, deliveryCostInput, targetGp2Input].forEach(el => {
+    el.value = '';
+  });
+  recalcGP();
+
+  if(navigator.vibrate){ navigator.vibrate(15); }
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+});
 
 [qtyInput, unitCostInput, unitPriceInput, deliveryCostInput].forEach(el => {
   el.addEventListener('input', recalcGP);
