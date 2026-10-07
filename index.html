@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>IMCD Vietnam | Công cụ tính giá vận chuyển</title>
+<title>IMCD VN | Internal Digital Tool</title>
 <style>
   :root{
     --navy:#003882;
@@ -868,6 +868,16 @@
   .nav-item svg{width:18px;height:18px;flex:none;}
   .nav-item:hover{background:var(--navy-soft);color:var(--navy);}
   .nav-item.active{background:var(--navy);color:#fff;}
+  .nav-group-head .chev{width:16px;height:16px;margin-left:auto;transition:transform .2s ease;}
+  .nav-group:not(.open) .nav-group-head .chev{transform:rotate(-90deg);}
+  .nav-group.has-active .nav-group-head{color:var(--navy);}
+  .nav-sub-list{display:none;margin:2px 0 6px 18px;padding-left:8px;border-left:2px solid var(--border);}
+  .nav-group.open .nav-sub-list{display:block;}
+  .nav-item.nav-sub{font-size:13px;padding:8px 10px;}
+  .nav-item.nav-sub svg{width:16px;height:16px;}
+  .soon-box{text-align:center;padding:34px 20px;background:#fafbfe;border:1px dashed #cdd4e0;border-radius:12px;}
+  .soon-box .soon-tag{display:inline-block;font-size:11px;font-weight:800;letter-spacing:.5px;text-transform:uppercase;background:var(--amber-bg);color:var(--amber);border-radius:20px;padding:4px 10px;margin-bottom:10px;}
+  .soon-box p{margin:0;font-size:13px;color:var(--muted);line-height:1.6;}
   .sidebar-foot{margin-top:auto;border-top:1px solid var(--border);padding-top:12px;}
   .nav-item.logout:hover{background:var(--danger-bg);color:var(--danger);}
   .app-main{flex:1;min-width:0;}
@@ -1003,24 +1013,68 @@
   .pdf-thumb .pg-actions button.del:hover{border-color:var(--danger);color:var(--danger);background:var(--danger-bg);}
   .pdf-thumb .pg-actions button:disabled{opacity:0.35;cursor:not-allowed;}
   .pdf-export{
-    display:grid;
-    grid-template-columns:1fr auto;
-    gap:12px;
-    align-items:end;
     margin-top:20px;
     padding-top:18px;
     border-top:1px solid var(--border);
   }
   .pdf-export .field input{font-size:15px;}
-  .pdf-export .btns{display:flex;gap:10px;flex-wrap:wrap;}
+  .card-actions{display:flex;justify-content:flex-end;gap:10px;flex-wrap:wrap;margin-top:16px;padding-top:16px;border-top:1px solid var(--border);}
+  .card-actions button{min-width:150px;}
+  .card-actions .card-reset{margin-right:auto;min-width:0;}
   @media(max-width:600px){
-    .pdf-export{grid-template-columns:1fr;}
-    .pdf-export .btns button{flex:1;}
+    .card-actions button{flex:1;}
+    .card-actions .card-reset{flex:0 0 100%;order:3;margin-right:0;}
     .pdf-grid{grid-template-columns:repeat(auto-fill,minmax(110px,1fr));}
   }
   .pdf-status{font-size:12.5px;margin-top:12px;min-height:18px;color:var(--muted);}
   .pdf-status.ok{color:var(--green);font-weight:700;}
   .pdf-status.err{color:var(--danger);font-weight:700;}
+  .pdf-tb-btns{display:flex;gap:8px;flex-wrap:wrap;}
+  .pdf-tb-btns button{padding:8px 14px;font-size:13px;}
+  .copy-summary-btn:disabled{opacity:0.5;cursor:wait;background:#fff;color:var(--imcd-blue);}
+  .ocr-box{margin-top:18px;padding-top:16px;border-top:1px solid var(--border);}
+  .ocr-head{display:flex;flex-direction:column;gap:6px;margin-bottom:10px;}
+  .ocr-title{font-size:13.5px;font-weight:700;color:var(--navy-dark);}
+  .ocr-warn{font-size:12px;color:var(--amber);background:var(--amber-bg);border-radius:6px;padding:6px 9px;}
+  #ocrText{
+    width:100%;min-height:260px;resize:vertical;
+    border:1px solid #cdd4e0;border-radius:8px;padding:12px;
+    font-family:Consolas,"Courier New",monospace;font-size:13px;line-height:1.5;color:var(--text);background:#fff;
+  }
+  #ocrText:focus{outline:none;border-color:var(--navy);box-shadow:0 0 0 3px var(--navy-soft);}
+  .ocr-actions{margin-top:10px;padding-top:0;border-top:none;}
+  .xl-files{display:flex;flex-direction:column;gap:6px;margin-top:14px;}
+  .xl-files:empty{display:none;}
+  .xl-file{display:flex;align-items:center;gap:10px;background:#fafbfe;border:1px solid var(--border);border-radius:8px;padding:7px 10px;font-size:13px;}
+  .xl-fname{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:700;color:var(--text);}
+  .xl-st{font-size:11.5px;font-weight:700;border-radius:20px;padding:2px 9px;background:#eef1f7;color:var(--muted);white-space:nowrap;}
+  .xl-st.run{background:var(--navy-soft);color:var(--navy);}
+  .xl-st.ok{background:var(--green-bg);color:var(--green);}
+  .xl-st.err{background:var(--danger-bg);color:var(--danger);cursor:help;}
+  .xl-del{width:26px;height:24px;border-radius:6px;border:1px solid var(--border);background:#fff;color:var(--muted);cursor:pointer;padding:0;flex:none;}
+  .xl-del:hover{border-color:var(--danger);color:var(--danger);background:var(--danger-bg);}
+  .xl-del:disabled{opacity:.35;cursor:not-allowed;}
+  .xl-clear{align-self:flex-end;background:none;border:none;color:var(--muted);font-size:12px;font-weight:700;cursor:pointer;padding:4px 2px;}
+  .xl-clear:hover{color:var(--danger);}
+  .xl-opts{display:flex;flex-wrap:wrap;gap:10px 22px;align-items:center;margin-top:16px;padding-top:14px;border-top:1px solid var(--border);font-size:13px;color:var(--text);}
+  .xl-check{display:flex;align-items:center;gap:7px;cursor:pointer;}
+  .xl-check input{width:16px;height:16px;accent-color:var(--navy);}
+  .xl-sel{display:flex;align-items:center;gap:8px;}
+  .xl-sel select{padding:6px 8px;border:1px solid #cdd4e0;border-radius:7px;font-family:inherit;font-size:13px;background:#fff;color:var(--text);}
+  .xl-empty{font-size:13.5px;color:var(--muted);background:#fafbfe;border:1px dashed #cdd4e0;border-radius:10px;padding:22px;text-align:center;}
+  .xl-tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px;}
+  .xl-tabs:empty{display:none;}
+  .xl-tab{border:1px solid var(--border);background:#fff;color:var(--muted);font-family:inherit;font-size:12.5px;font-weight:700;border-radius:7px;padding:6px 12px;cursor:pointer;}
+  .xl-tab:hover{border-color:var(--navy);color:var(--navy);}
+  .xl-tab.active{background:var(--navy);border-color:var(--navy);color:#fff;}
+  .xl-preview{max-height:460px;overflow:auto;border:1px solid var(--border);border-radius:8px;}
+  .xl-preview:empty{display:none;}
+  .xl-preview .hint{padding:8px 10px;}
+  .xl-table{border-collapse:collapse;font-size:12px;min-width:100%;}
+  .xl-table th,.xl-table td{border:1px solid #e3e7ee;padding:4px 7px;white-space:nowrap;max-width:340px;overflow:hidden;text-overflow:ellipsis;text-align:left;}
+  .xl-table thead th{position:sticky;top:0;background:#eef1f7;color:var(--muted);font-weight:700;text-align:center;z-index:1;}
+  .xl-table tbody th{background:#f6f8fb;color:#8a95a5;font-weight:400;text-align:right;position:sticky;left:0;}
+  .xl-table td.num{text-align:right;background:#eef6fc;color:var(--navy-dark);font-variant-numeric:tabular-nums;}
   .paste-flash{animation:pasteFlash .6s ease;}
   @keyframes pasteFlash{0%{background:#d9ecfa;}100%{background:#fafbfe;}}
 </style>
@@ -1030,7 +1084,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Giá vận chuyển">
+<meta name="apple-mobile-web-app-title" content="IMCD VN Tool">
 <meta name="theme-color" content="#003882">
 </head>
 <body>
@@ -1066,7 +1120,14 @@
 <aside class="sidebar" id="sidebar">
   <div class="nav-label" data-i18n="navMenu">Menu</div>
   <button type="button" class="nav-item active" data-view="ship"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h11v10H3z"/><path d="M14 9h4l3 3v4h-7z"/><circle cx="7" cy="17.5" r="1.8"/><circle cx="17" cy="17.5" r="1.8"/></svg><span data-i18n="navShip">Ước tính vận chuyển</span></button>
-  <button type="button" class="nav-item" data-view="pdf"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H6a1 1 0 0 0-1 1v16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V8z"/><path d="M14 3v5h5"/><path d="M9 13h6M9 17h4"/></svg><span data-i18n="navPdf">Ảnh → PDF (PO)</span></button>
+  <div class="nav-group open" id="navGroupConv">
+    <button type="button" class="nav-item nav-group-head" aria-expanded="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h13"/><path d="M14 4l3 3-3 3"/><path d="M20 17H7"/><path d="M10 14l-3 3 3 3"/></svg><span data-i18n="navConv">Conversion</span><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></button>
+    <div class="nav-sub-list">
+      <button type="button" class="nav-item nav-sub" data-view="pdf"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="1.8"/><path d="M21 16l-5-5-9 9"/></svg><span data-i18n="navPdf">1. Ảnh → PDF</span></button>
+      <button type="button" class="nav-item nav-sub" data-view="img2xls"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 10h18M3 15h18M9 4v16"/></svg><span data-i18n="navImgXls">2. Ảnh → Excel</span></button>
+      <button type="button" class="nav-item nav-sub" data-view="pdf2xls"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H6a1 1 0 0 0-1 1v16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V8z"/><path d="M14 3v5h5"/><path d="M9 13h6M9 17h4"/></svg><span data-i18n="navPdfXls">3. PDF → Excel</span></button>
+    </div>
+  </div>
   <div class="sidebar-foot">
     <button type="button" class="nav-item logout" id="logoutBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 4h4a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-4"/><path d="M9 8l-4 4 4 4"/><path d="M5 12h11"/></svg><span data-i18n="navLogout">Đăng xuất</span></button>
   </div>
@@ -1236,9 +1297,24 @@
 
     <div class="pdf-toolbar" id="pdfToolbar" style="display:none;">
       <div class="pdf-count"><span id="pdfCount">0</span> <span data-i18n="pdfPages">trang</span><small data-i18n="pdfReorderHint">Kéo thả để đổi thứ tự trang</small></div>
-      <button type="button" class="refresh-btn" id="pdfClearBtn">🗑 <span data-i18n="pdfClear">Xóa tất cả</span></button>
+      <div class="pdf-tb-btns">
+        <button type="button" class="copy-summary-btn" id="ocrRunBtn">🔤 <span data-i18n="ocrRun">Đọc chữ (OCR)</span></button>
+        <button type="button" class="refresh-btn" id="pdfClearBtn">🗑 <span data-i18n="pdfClear">Xóa tất cả</span></button>
+      </div>
     </div>
     <div class="pdf-grid" id="pdfGrid"></div>
+
+    <div class="ocr-box" id="ocrBox" style="display:none;">
+      <div class="ocr-head">
+        <span class="ocr-title" data-i18n="ocrTitle">Văn bản nhận dạng từ ảnh</span>
+        <span class="ocr-warn" data-i18n="ocrWarn">⚠️ OCR có thể đọc sai số lượng, mã hàng, dấu tiếng Việt. Vui lòng soát lại trước khi gửi.</span>
+      </div>
+      <textarea id="ocrText" spellcheck="false"></textarea>
+      <div class="copy-summary-row ocr-actions">
+        <button type="button" class="copy-summary-btn" id="ocrCopyBtn">📋 <span data-i18n="ocrCopy">Copy toàn bộ</span></button>
+        <span class="copy-summary-hint" id="ocrStatus"></span>
+      </div>
+    </div>
   </div>
 
   <div class="card">
@@ -1248,13 +1324,108 @@
       <div class="field">
         <label for="pdfNameInput" data-i18n="pdfLblName">Tên file</label>
         <input type="text" id="pdfNameInput" autocomplete="off" spellcheck="false">
-        <div class="hint" data-i18n="pdfNameHint">Để trống sẽ tự đặt theo mẫu PO_[ngày]_[giờ] lúc xuất file</div>
-      </div>
-      <div class="btns">
-        <button type="button" class="primary" id="pdfExportBtn" disabled>⬇ <span data-i18n="pdfExport">Tải PDF</span></button>
+        <div class="hint" data-i18n="pdfNameHint">Để trống sẽ tự đặt theo mẫu PO_[ngày]_[giờ] lúc xuất file. Phím tắt: Ctrl+S tải PDF, Ctrl+E gửi email.</div>
       </div>
     </div>
     <div class="pdf-status" id="pdfStatus"></div>
+    <div class="card-actions">
+      <button type="button" class="refresh-btn card-reset" id="pdfResetBtn">🔄 <span data-i18n="refreshBtn">Làm mới</span></button>
+      <button type="button" class="copy-summary-btn" id="pdfEmailBtn" disabled>✉ <span data-i18n="pdfEmail">Gửi email (Outlook)</span></button>
+      <button type="button" class="primary" id="pdfExportBtn" disabled>⬇ <span data-i18n="pdfExport">Tải PDF</span></button>
+    </div>
+  </div>
+</div>
+</section>
+
+<section class="view xl-view" id="view-img2xls" data-mode="img" data-prefix="ix">
+<div class="wrap">
+  <div class="card">
+    <h2><span class="step-num">1</span> <span data-i18n="xlImgStep1">Thêm ảnh có bảng</span></h2>
+    <p class="sub" data-i18n="xlImgSub1">Mỗi ảnh xuất thành 1 sheet. Chữ được nhận dạng bằng OCR ngay trên trình duyệt, không tải lên máy chủ.</p>
+    <div class="pdf-drop" id="ixDrop" tabindex="0" role="button">
+      <div class="pd-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 16V4"/><path d="M7 9l5-5 5 5"/><path d="M4 16v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3"/></svg></div>
+      <div class="pd-main" data-i18n="xlImgDrop">Kéo thả ảnh vào đây, hoặc bấm để chọn ảnh</div>
+      <div class="pd-sub" data-i18n="xlImgDropSub">Hoặc copy ảnh rồi nhấn <span class="kbd">Ctrl</span> + <span class="kbd">V</span>. Với ảnh từ Zalo: mở ảnh gốc rồi copy, đừng chụp màn hình khung chat (ảnh xem trước rất mờ).</div>
+    </div>
+    <input type="file" id="ixInput" accept="image/*" multiple hidden>
+    <div class="xl-files" id="ixFiles"></div>
+    <div class="xl-opts">
+      <label class="xl-check"><input type="checkbox" id="ixNum" checked> <span data-i18n="xlNumConv">Chuyển số thành dạng số trong Excel</span></label>
+      <label class="xl-sel"><span data-i18n="xlNumFmt">Định dạng số trong file:</span>
+        <select id="ixLoc">
+          <option value="auto" data-i18n="xlLocAuto">Tự nhận dạng</option>
+          <option value="vn" data-i18n="xlLocVn">Kiểu Việt (1.234,5)</option>
+          <option value="us" data-i18n="xlLocUs">Kiểu Mỹ (1,234.5)</option>
+        </select>
+      </label>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2><span class="step-num">2</span> <span data-i18n="xlStep2">Xem trước &amp; tải Excel</span></h2>
+    <p class="sub" data-i18n="xlSub2">Bảng được tách cột theo vị trí chữ trong file. Ô màu xanh là số đã chuyển sang dạng số. Vui lòng soát lại trước khi dùng.</p>
+    <div class="xl-empty" id="ixEmpty" data-i18n="xlEmpty">Chưa có dữ liệu. Thêm file ở Bước 1, kết quả sẽ tự hiển thị tại đây.</div>
+    <div class="xl-tabs" id="ixTabs"></div>
+    <div class="xl-preview" id="ixPreview"></div>
+    <div class="pdf-export">
+      <div class="field">
+        <label for="ixName" data-i18n="pdfLblName">Tên file</label>
+        <input type="text" id="ixName" autocomplete="off" spellcheck="false">
+        <div class="hint" data-i18n="xlNameHint">Để trống: 1 file thì giữ tên file gốc, nhiều file thì đặt PO_[ngày]_[giờ]</div>
+      </div>
+    </div>
+    <div class="pdf-status" id="ixStatus"></div>
+    <div class="card-actions">
+      <button type="button" class="refresh-btn card-reset" id="ixResetBtn">🔄 <span data-i18n="refreshBtn">Làm mới</span></button>
+      <button type="button" class="copy-summary-btn" id="ixCopy" disabled>📋 <span data-i18n="xlCopy">Copy sheet đang xem</span></button>
+      <button type="button" class="primary" id="ixExport" disabled>⬇ <span data-i18n="xlExport">Tải Excel</span></button>
+    </div>
+  </div>
+</div>
+</section>
+<section class="view xl-view" id="view-pdf2xls" data-mode="pdf" data-prefix="px">
+<div class="wrap">
+  <div class="card">
+    <h2><span class="step-num">1</span> <span data-i18n="xlPdfStep1">Thêm file PDF</span></h2>
+    <p class="sub" data-i18n="xlPdfSub1">Mỗi trang PDF xuất thành 1 sheet. Dùng tốt nhất với PDF xuất từ phần mềm (bôi đen copy được chữ).</p>
+    <div class="pdf-drop" id="pxDrop" tabindex="0" role="button">
+      <div class="pd-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 16V4"/><path d="M7 9l5-5 5 5"/><path d="M4 16v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3"/></svg></div>
+      <div class="pd-main" data-i18n="xlPdfDrop">Kéo thả file PDF vào đây, hoặc bấm để chọn file</div>
+      <div class="pd-sub" data-i18n="xlPdfDropSub">Có thể chọn nhiều file cùng lúc. PDF dạng scan sẽ tự chuyển sang OCR.</div>
+    </div>
+    <input type="file" id="pxInput" accept="application/pdf,.pdf" multiple hidden>
+    <div class="xl-files" id="pxFiles"></div>
+    <div class="xl-opts">
+      <label class="xl-check"><input type="checkbox" id="pxNum" checked> <span data-i18n="xlNumConv">Chuyển số thành dạng số trong Excel</span></label>
+      <label class="xl-sel"><span data-i18n="xlNumFmt">Định dạng số trong file:</span>
+        <select id="pxLoc">
+          <option value="auto" data-i18n="xlLocAuto">Tự nhận dạng</option>
+          <option value="vn" data-i18n="xlLocVn">Kiểu Việt (1.234,5)</option>
+          <option value="us" data-i18n="xlLocUs">Kiểu Mỹ (1,234.5)</option>
+        </select>
+      </label>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2><span class="step-num">2</span> <span data-i18n="xlStep2">Xem trước &amp; tải Excel</span></h2>
+    <p class="sub" data-i18n="xlSub2">Bảng được tách cột theo vị trí chữ trong file. Ô màu xanh là số đã chuyển sang dạng số. Vui lòng soát lại trước khi dùng.</p>
+    <div class="xl-empty" id="pxEmpty" data-i18n="xlEmpty">Chưa có dữ liệu. Thêm file ở Bước 1, kết quả sẽ tự hiển thị tại đây.</div>
+    <div class="xl-tabs" id="pxTabs"></div>
+    <div class="xl-preview" id="pxPreview"></div>
+    <div class="pdf-export">
+      <div class="field">
+        <label for="pxName" data-i18n="pdfLblName">Tên file</label>
+        <input type="text" id="pxName" autocomplete="off" spellcheck="false">
+        <div class="hint" data-i18n="xlNameHint">Để trống: 1 file thì giữ tên file gốc, nhiều file thì đặt PO_[ngày]_[giờ]</div>
+      </div>
+    </div>
+    <div class="pdf-status" id="pxStatus"></div>
+    <div class="card-actions">
+      <button type="button" class="refresh-btn card-reset" id="pxResetBtn">🔄 <span data-i18n="refreshBtn">Làm mới</span></button>
+      <button type="button" class="copy-summary-btn" id="pxCopy" disabled>📋 <span data-i18n="xlCopy">Copy sheet đang xem</span></button>
+      <button type="button" class="primary" id="pxExport" disabled>⬇ <span data-i18n="xlExport">Tải Excel</span></button>
+    </div>
   </div>
 </div>
 </section>
@@ -1462,8 +1633,51 @@ const translations = {
 };
 /* ---------- i18n: Image -> PDF (PO) view ---------- */
 Object.assign(translations.vi, {
-  navPdf: 'Ảnh → PDF (PO)',
-  pdfAppTitle: 'CHUYỂN ẢNH PO SANG PDF <span class="version-tag">BETA</span>',
+  navPdf: '1. Ảnh → PDF',
+  navConv: 'Conversion',
+  xlImgStep1: 'Thêm ảnh có bảng',
+  xlPdfStep1: 'Thêm file PDF',
+  xlImgSub1: 'Mỗi ảnh xuất thành 1 sheet. Chữ được nhận dạng bằng OCR ngay trên trình duyệt, không tải lên máy chủ.',
+  xlPdfSub1: 'Mỗi trang PDF xuất thành 1 sheet. Dùng tốt nhất với PDF xuất từ phần mềm (bôi đen copy được chữ).',
+  xlImgDrop: 'Kéo thả ảnh vào đây, hoặc bấm để chọn ảnh',
+  xlPdfDrop: 'Kéo thả file PDF vào đây, hoặc bấm để chọn file',
+  xlImgDropSub: 'Hoặc copy ảnh rồi nhấn <span class="kbd">Ctrl</span> + <span class="kbd">V</span>. Với ảnh từ Zalo: mở ảnh gốc rồi copy, đừng chụp màn hình khung chat (ảnh xem trước rất mờ).',
+  xlPdfDropSub: 'Có thể chọn nhiều file cùng lúc. PDF dạng scan sẽ tự chuyển sang OCR.',
+  xlNumConv: 'Chuyển số thành dạng số trong Excel',
+  xlNumFmt: 'Định dạng số trong file:',
+  xlLocAuto: 'Tự nhận dạng',
+  xlLocVn: 'Kiểu Việt (1.234,5)',
+  xlLocUs: 'Kiểu Mỹ (1,234.5)',
+  xlStep2: 'Xem trước &amp; tải Excel',
+  xlSub2: 'Bảng được tách cột theo vị trí chữ trong file. Ô màu xanh là số đã chuyển sang dạng số. Vui lòng soát lại trước khi dùng.',
+  xlEmpty: 'Chưa có dữ liệu. Thêm file ở Bước 1, kết quả sẽ tự hiển thị tại đây.',
+  xlNameHint: 'Để trống: 1 file thì giữ tên file gốc, nhiều file thì đặt PO_[ngày]_[giờ]',
+  xlCopy: 'Copy sheet đang xem',
+  xlExport: 'Tải Excel',
+  xlBadImg: 'Chỉ nhận file ảnh (JPG, PNG, WEBP, GIF, BMP).',
+  xlBadPdf: 'Chỉ nhận file PDF.',
+  xlOcrProg: 'Đang đọc chữ trong {name}: {pct}%',
+  xlOcrPage: 'Đang OCR {name}, trang {i}/{n}: {pct}%',
+  xlReading: 'Đang đọc {name}...',
+  xlNetErr: 'Không tải được thư viện. Máy cần truy cập được cdn.jsdelivr.net (có thể mạng công ty đang chặn).',
+  xlReady: 'Xong. {n} sheet sẵn sàng để tải.',
+  xlDone: 'Đã tạo {name} ({n} sheet).',
+  xlStRun: 'Đang xử lý...',
+  xlStErr: 'Lỗi',
+  xlStDone: '{n} sheet',
+  xlStWait: 'Chờ',
+  xlSheetImg: 'Ảnh',
+  xlMoreRows: 'Còn {n} dòng nữa không hiển thị trong xem trước (vẫn có trong file Excel).',
+  navImgXls: '2. Ảnh → Excel',
+  navPdfXls: '3. PDF → Excel',
+  imgXlsAppTitle: 'CHUYỂN ẢNH SANG EXCEL <span class="version-tag">BETA</span>',
+  pdfXlsAppTitle: 'CHUYỂN PDF SANG EXCEL <span class="version-tag">BETA</span>',
+  imgXlsTitle: 'Ảnh → Excel',
+  pdfXlsTitle: 'PDF → Excel',
+  soonTag: 'Đang phát triển',
+  imgXlsSoon: 'Chuyển bảng trong ảnh (PO, báo giá, packing list) thành file Excel. Tính năng sẽ sớm có mặt.',
+  pdfXlsSoon: 'Trích xuất bảng từ file PDF thành file Excel. Tính năng sẽ sớm có mặt.',
+  pdfAppTitle: 'CHUYỂN ẢNH SANG PDF <span class="version-tag">BETA</span>',
   pdfStep1Title: 'Thêm ảnh PO',
   pdfStep1Sub: 'Ảnh được xử lý ngay trên trình duyệt, không tải lên bất kỳ máy chủ nào.',
   pdfDropMain: 'Kéo thả ảnh vào đây, hoặc bấm để chọn ảnh',
@@ -1474,7 +1688,7 @@ Object.assign(translations.vi, {
   pdfStep2Title: 'Xuất PDF (khổ A4)',
   pdfStep2Sub: 'Tất cả ảnh được gộp thành 1 file PDF, mỗi ảnh 1 trang A4. Ảnh ngang tự động dùng trang A4 ngang.',
   pdfLblName: 'Tên file',
-  pdfNameHint: 'Để trống sẽ tự đặt theo mẫu PO_[ngày]_[giờ] lúc xuất file',
+  pdfNameHint: 'Để trống sẽ tự đặt theo mẫu PO_[ngày]_[giờ] lúc xuất file. Phím tắt: Ctrl+S tải PDF, Ctrl+E gửi email.',
   pdfExport: 'Tải PDF',
   pdfBusy: 'Đang tạo PDF...',
   pdfDone: 'Đã tạo {name} ({pages} trang, {size}). Bấm "Xóa tất cả" trước khi làm PO tiếp theo.',
@@ -1485,11 +1699,71 @@ Object.assign(translations.vi, {
   pdfRotate: 'Xoay 90°',
   pdfLeft: 'Lên trước',
   pdfRight: 'Ra sau',
-  pdfDelete: 'Xóa trang'
+  pdfDelete: 'Xóa trang',
+  pdfEmail: 'Gửi email (Outlook)',
+  mailHello: 'Dear team,',
+  mailBody: 'Gửi kèm file {name} ({pages} trang). Nhờ team kiểm tra và xử lý giúp.',
+  mailThanks: 'Trân trọng,',
+  mailDone: 'Đã tạo email nháp {name}. Bấm vào file vừa tải về để mở trong Outlook (PDF đã đính kèm sẵn). Mẹo: chuột phải file trong danh sách tải xuống, chọn "Luôn mở loại tệp này" để lần sau Outlook tự mở.',
+  ocrRun: 'Đọc chữ (OCR)',
+  ocrTitle: 'Văn bản nhận dạng từ ảnh',
+  ocrWarn: '⚠️ OCR có thể đọc sai số lượng, mã hàng, dấu tiếng Việt. Vui lòng soát lại trước khi gửi.',
+  ocrCopy: 'Copy toàn bộ',
+  ocrCopied: 'Đã copy ✓',
+  ocrLoading: 'Đang tải bộ nhận dạng tiếng Việt (chỉ lâu ở lần đầu)...',
+  ocrProgress: 'Đang đọc trang {i}/{n}: {pct}%',
+  ocrDone: 'Đã đọc xong {n} trang trong {sec} giây.',
+  ocrPage: 'Trang',
+  ocrEmpty: '(Không nhận dạng được chữ)',
+  ocrNetErr: 'Không tải được thư viện OCR. Máy cần truy cập được cdn.jsdelivr.net (có thể mạng công ty đang chặn).',
+  ocrErr: 'Lỗi OCR: {msg}'
 });
 Object.assign(translations.en, {
-  navPdf: 'Image → PDF (PO)',
-  pdfAppTitle: 'PO IMAGE TO PDF <span class="version-tag">BETA</span>',
+  navPdf: '1. Image → PDF',
+  navConv: 'Conversion',
+  xlImgStep1: 'Add images with tables',
+  xlPdfStep1: 'Add PDF files',
+  xlImgSub1: 'Each image becomes 1 sheet. Text is recognized by OCR in your browser and never uploaded.',
+  xlPdfSub1: 'Each PDF page becomes 1 sheet. Works best with PDFs exported from software (text can be selected).',
+  xlImgDrop: 'Drop images here, or click to choose',
+  xlPdfDrop: 'Drop PDF files here, or click to choose',
+  xlImgDropSub: 'Or copy an image and press <span class="kbd">Ctrl</span> + <span class="kbd">V</span>. For Zalo: open the original image and copy it, do not screenshot the chat (previews are blurry).',
+  xlPdfDropSub: 'You can pick several files at once. Scanned PDFs switch to OCR automatically.',
+  xlNumConv: 'Convert numbers to numeric cells in Excel',
+  xlNumFmt: 'Number format in the file:',
+  xlLocAuto: 'Auto-detect',
+  xlLocVn: 'Vietnamese (1.234,5)',
+  xlLocUs: 'US (1,234.5)',
+  xlStep2: 'Preview &amp; download Excel',
+  xlSub2: 'Columns are split by text position in the file. Blue cells are numbers converted to numeric. Please review before use.',
+  xlEmpty: 'No data yet. Add files in Step 1 and the result shows here automatically.',
+  xlNameHint: 'Leave empty: 1 file keeps its original name, several files use PO_[date]_[time]',
+  xlCopy: 'Copy current sheet',
+  xlExport: 'Download Excel',
+  xlBadImg: 'Image files only (JPG, PNG, WEBP, GIF, BMP).',
+  xlBadPdf: 'PDF files only.',
+  xlOcrProg: 'Reading text in {name}: {pct}%',
+  xlOcrPage: 'OCR {name}, page {i}/{n}: {pct}%',
+  xlReading: 'Reading {name}...',
+  xlNetErr: 'Could not load the library. This computer needs access to cdn.jsdelivr.net (the company network may be blocking it).',
+  xlReady: 'Done. {n} sheet(s) ready to download.',
+  xlDone: 'Created {name} ({n} sheet(s)).',
+  xlStRun: 'Processing...',
+  xlStErr: 'Error',
+  xlStDone: '{n} sheet(s)',
+  xlStWait: 'Waiting',
+  xlSheetImg: 'Image',
+  xlMoreRows: '{n} more rows not shown in the preview (they are in the Excel file).',
+  navImgXls: '2. Image → Excel',
+  navPdfXls: '3. PDF → Excel',
+  imgXlsAppTitle: 'IMAGE TO EXCEL <span class="version-tag">BETA</span>',
+  pdfXlsAppTitle: 'PDF TO EXCEL <span class="version-tag">BETA</span>',
+  imgXlsTitle: 'Image → Excel',
+  pdfXlsTitle: 'PDF → Excel',
+  soonTag: 'In development',
+  imgXlsSoon: 'Turn tables in images (PO, quotation, packing list) into an Excel file. Coming soon.',
+  pdfXlsSoon: 'Extract tables from PDF files into an Excel file. Coming soon.',
+  pdfAppTitle: 'IMAGE TO PDF <span class="version-tag">BETA</span>',
   pdfStep1Title: 'Add PO images',
   pdfStep1Sub: 'Images are processed in your browser and never uploaded to any server.',
   pdfDropMain: 'Drop images here, or click to choose',
@@ -1500,7 +1774,7 @@ Object.assign(translations.en, {
   pdfStep2Title: 'Export PDF (A4)',
   pdfStep2Sub: 'All images are merged into 1 PDF, one A4 page per image. Landscape images use landscape A4 automatically.',
   pdfLblName: 'File name',
-  pdfNameHint: 'Leave empty to auto-name as PO_[date]_[time] at export',
+  pdfNameHint: 'Leave empty to auto-name as PO_[date]_[time] at export. Shortcuts: Ctrl+S download PDF, Ctrl+E send email.',
   pdfExport: 'Download PDF',
   pdfBusy: 'Creating PDF...',
   pdfDone: 'Created {name} ({pages} pages, {size}). Click "Clear all" before the next PO.',
@@ -1511,7 +1785,24 @@ Object.assign(translations.en, {
   pdfRotate: 'Rotate 90°',
   pdfLeft: 'Move earlier',
   pdfRight: 'Move later',
-  pdfDelete: 'Delete page'
+  pdfDelete: 'Delete page',
+  pdfEmail: 'Send email (Outlook)',
+  mailHello: 'Dear team,',
+  mailBody: 'Please find attached {name} ({pages} pages) for your processing.',
+  mailThanks: 'Best regards,',
+  mailDone: 'Email draft {name} created. Click the downloaded file to open it in Outlook (PDF already attached). Tip: right-click it in the downloads list and choose "Always open files of this type" so Outlook opens automatically next time.',
+  ocrRun: 'Read text (OCR)',
+  ocrTitle: 'Text recognized from images',
+  ocrWarn: '⚠️ OCR may misread quantities, item codes or Vietnamese accents. Please review before sending.',
+  ocrCopy: 'Copy all',
+  ocrCopied: 'Copied ✓',
+  ocrLoading: 'Loading Vietnamese recognition data (slow only the first time)...',
+  ocrProgress: 'Reading page {i}/{n}: {pct}%',
+  ocrDone: 'Finished {n} page(s) in {sec} s.',
+  ocrPage: 'Page',
+  ocrEmpty: '(No text recognized)',
+  ocrNetErr: 'Could not load the OCR library. This computer needs access to cdn.jsdelivr.net (the company network may be blocking it).',
+  ocrErr: 'OCR error: {msg}'
 });
 let currentLang = 'vi';
 let lastSelectedOption = null;
@@ -2250,7 +2541,11 @@ recalcGP();
   window.addEventListener('resize', syncHeaderHeight);
   syncHeaderHeight();
 
-  const TITLE_KEYS = { ship:'appTitle', pdf:'pdfAppTitle' };
+  const TITLE_KEYS = { ship:'appTitle', pdf:'pdfAppTitle', img2xls:'imgXlsAppTitle', pdf2xls:'pdfXlsAppTitle' };
+  document.querySelectorAll('.nav-group-head').forEach(h => h.addEventListener('click', () => {
+    const g = h.closest('.nav-group'); const open = !g.classList.contains('open');
+    g.classList.toggle('open', open); h.setAttribute('aria-expanded', open ? 'true' : 'false');
+  }));
   const navItems = document.querySelectorAll('.nav-item[data-view]');
 
   function closeNav(){ document.body.classList.remove('nav-open'); }
@@ -2262,6 +2557,11 @@ recalcGP();
     if(!TITLE_KEYS[view]) view = 'ship';
     document.querySelectorAll('.view').forEach(v => v.classList.toggle('active', v.id === 'view-' + view));
     navItems.forEach(n => n.classList.toggle('active', n.getAttribute('data-view') === view));
+    document.querySelectorAll('.nav-group').forEach(g => {
+      const has = !!g.querySelector('.nav-item.active');
+      g.classList.toggle('has-active', has);
+      if(has){ g.classList.add('open'); g.querySelector('.nav-group-head').setAttribute('aria-expanded', 'true'); }
+    });
     h1.setAttribute('data-i18n', TITLE_KEYS[view]);
     h1.innerHTML = t(TITLE_KEYS[view]);
     try { sessionStorage.setItem('imcd_portal_view', view); } catch(e){}
@@ -2535,12 +2835,21 @@ recalcGP();
   clearBtn.addEventListener('click', () => {
     items.forEach(it => URL.revokeObjectURL(it.url));
     items = []; nameInput.value = ''; render(); setStatus('');
+    ocrBox.style.display = 'none'; ocrText.value = ''; ocrStatus.textContent = '';
   });
+  document.getElementById('pdfResetBtn').addEventListener('click', () => { clearBtn.click(); fileInput.value = ''; window.scrollTo({ top: 0, behavior: 'smooth' }); });
 
   /* ---- Render one image to JPEG bytes, honoring rotation ---- */
   function toJpeg(it){
+    const c = toCanvas(it, MAX_PX);
+    const b64 = c.toDataURL('image/jpeg', JPEG_Q).split(',')[1];
+    const bin = atob(b64); const bytes = new Uint8Array(bin.length);
+    for(let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+    return { bytes, w: c.width, h: c.height };
+  }
+  function toCanvas(it, maxPx){
     const o = oriented(it);
-    const k = Math.min(1, MAX_PX / Math.max(o.w, o.h));
+    const k = Math.min(1, maxPx / Math.max(o.w, o.h));
     const cw = Math.max(1, Math.round(o.w * k)), ch = Math.max(1, Math.round(o.h * k));
     const c = document.createElement('canvas'); c.width = cw; c.height = ch;
     const g = c.getContext('2d');
@@ -2550,10 +2859,7 @@ recalcGP();
     g.rotate(it.rot * Math.PI / 180);
     const dw = it.w * k, dh = it.h * k;
     g.drawImage(it.img, -dw / 2, -dh / 2, dw, dh);
-    const b64 = c.toDataURL('image/jpeg', JPEG_Q).split(',')[1];
-    const bin = atob(b64); const bytes = new Uint8Array(bin.length);
-    for(let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
-    return { bytes, w: cw, h: ch };
+    return c;
   }
 
   /* ---- Minimal PDF 1.4 writer: one A4 page per JPEG (DCTDecode) ---- */
@@ -2620,13 +2926,799 @@ recalcGP();
   }
   exportBtn.addEventListener('click', exportPdf);
   nameInput.addEventListener('keydown', e => { if(e.key === 'Enter') exportPdf(); });
+
+  /* ---- Email: a draft .eml (X-Unsent) with the PDF attached; opening it shows an Outlook compose window ---- */
+  const emailBtn = document.getElementById('pdfEmailBtn');
+  new MutationObserver(() => { emailBtn.disabled = exportBtn.disabled; }).observe(exportBtn, { attributes: true, attributeFilter: ['disabled'] });
+
+  function b64(bytes){
+    let bin = '';
+    for(let i = 0; i < bytes.length; i += 0x8000) bin += String.fromCharCode.apply(null, bytes.subarray(i, i + 0x8000));
+    return btoa(bin);
+  }
+  const wrap76 = str => str.replace(/(.{76})/g, '$1\r\n');
+  const mimeWord = str => /^[\x20-\x7e]*$/.test(str) ? str : '=?UTF-8?B?' + b64(new TextEncoder().encode(str)) + '?=';
+  const htmlEsc = str => String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
+  function buildEml(pdfBlobBytes, fileName, pageCount){
+    const subject = fileName.replace(/\.pdf$/i, '');
+    const body = '<html><body style="font-family:Calibri,Arial,sans-serif;font-size:11pt;">' +
+      '<p>' + htmlEsc(t('mailHello')) + '</p>' +
+      '<p>' + htmlEsc(fmt(t('mailBody'), { name: fileName, pages: pageCount })) + '</p>' +
+      '<p>' + htmlEsc(t('mailThanks')) + '</p></body></html>';
+    const boundary = '----=_IMCD_' + Date.now().toString(36);
+    const fnEnc = mimeWord(fileName.replace(/"/g, ''));   // RFC 2047 encoded name: what Outlook reads for Vietnamese file names
+    const lines = [
+      'X-Unsent: 1',
+      'To: ',
+      'Subject: ' + mimeWord(subject),
+      'MIME-Version: 1.0',
+      'Content-Type: multipart/mixed; boundary="' + boundary + '"',
+      '',
+      '--' + boundary,
+      'Content-Type: text/html; charset="utf-8"',
+      'Content-Transfer-Encoding: base64',
+      '',
+      wrap76(b64(new TextEncoder().encode(body))),
+      '--' + boundary,
+      'Content-Type: application/pdf; name="' + fnEnc + '"',
+      'Content-Disposition: attachment; filename="' + fnEnc + '"',
+      'Content-Transfer-Encoding: base64',
+      '',
+      wrap76(b64(pdfBlobBytes)),
+      '--' + boundary + '--',
+      ''
+    ];
+    return new Blob([lines.join('\r\n')], { type: 'message/rfc822' });
+  }
+
+  async function emailPdf(){
+    if(!items.length || emailBtn.disabled) return;
+    exportBtn.disabled = true; setStatus(t('pdfBusy'));
+    await new Promise(r => setTimeout(r, 30));
+    try {
+      const pages = items.map(toJpeg);
+      const pdf = buildPdf(pages);
+      const name = cleanName(nameInput.value);
+      const eml = buildEml(new Uint8Array(await pdf.arrayBuffer()), name, pages.length);
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(eml); a.download = name.replace(/\.pdf$/i, '') + '.eml';
+      document.body.appendChild(a); a.click(); a.remove();
+      setTimeout(() => URL.revokeObjectURL(a.href), 10000);
+      setStatus(fmt(t('mailDone'), { name: a.download }), 'ok');
+    } catch(err){
+      setStatus(fmt(t('pdfError'), { msg: err && err.message ? err.message : err }), 'err');
+    } finally {
+      exportBtn.disabled = !items.length;
+    }
+  }
+  emailBtn.addEventListener('click', emailPdf);
   document.addEventListener('keydown', e => {
     if(!isActive()) return;
     if((e.ctrlKey || e.metaKey) && (e.key === 's' || e.key === 'S' || e.key === 'Enter')){ e.preventDefault(); exportPdf(); }
+    if((e.ctrlKey || e.metaKey) && (e.key === 'e' || e.key === 'E')){ e.preventDefault(); emailPdf(); }
+  });
+
+  /* ---- OCR: shared Tesseract worker (IMCD_OCR, defined below) ---- */
+  const ocrRunBtn = document.getElementById('ocrRunBtn');
+  const ocrBox = document.getElementById('ocrBox');
+  const ocrText = document.getElementById('ocrText');
+  const ocrStatus = document.getElementById('ocrStatus');
+  const ocrCopyBtn = document.getElementById('ocrCopyBtn');
+  let ocrProgress = null;
+
+  async function runOcr(){
+    if(!items.length || ocrRunBtn.disabled) return;
+    ocrRunBtn.disabled = true; exportBtn.disabled = true;
+    ocrBox.style.display = 'block';
+    ocrStatus.textContent = t('ocrLoading');
+    const t0 = Date.now();
+    try {
+      const out = [];
+      const list = items.slice();
+      for(let i = 0; i < list.length; i++){
+        ocrProgress = p => { ocrStatus.textContent = fmt(t('ocrProgress'), { i: i + 1, n: list.length, pct: Math.round(p * 100) }); };
+        ocrProgress(0);
+        const data = await IMCD_OCR.run(IMCD_OCR.prepare(toCanvas(list[i], MAX_PX)), pr => ocrProgress && ocrProgress(pr));
+        const txt = (data.text || '').replace(/[ \t]+$/gm, '').replace(/\n{2,}/g, '\n').trim() || t('ocrEmpty');
+        out.push(list.length > 1 ? '----- ' + t('ocrPage') + ' ' + (i + 1) + ' -----\n' + txt : txt);
+      }
+      ocrText.value = out.join('\n\n');
+      ocrStatus.textContent = fmt(t('ocrDone'), { n: list.length, sec: ((Date.now() - t0) / 1000).toFixed(1) });
+    } catch(err){
+      ocrStatus.textContent = err && err.message === 'NET' ? t('ocrNetErr') : fmt(t('ocrErr'), { msg: (err && err.message) || err });
+    } finally {
+      ocrProgress = null;
+      ocrRunBtn.disabled = false; exportBtn.disabled = !items.length;
+    }
+  }
+  ocrRunBtn.addEventListener('click', runOcr);
+
+  ocrCopyBtn.addEventListener('click', async () => {
+    const txt = ocrText.value; if(!txt) return;
+    let ok = false;
+    try { await navigator.clipboard.writeText(txt); ok = true; } catch(e){
+      ocrText.focus(); ocrText.select();
+      try { ok = document.execCommand('copy'); } catch(e2){}
+    }
+    if(ok){
+      ocrCopyBtn.classList.add('copied');
+      const span = ocrCopyBtn.querySelector('span'); span.textContent = t('ocrCopied');
+      setTimeout(() => { ocrCopyBtn.classList.remove('copied'); span.textContent = t('ocrCopy'); }, 1600);
+    }
   });
 
   // Re-render thumbnail tooltips when language changes
   document.getElementById('langToggle').addEventListener('click', () => setTimeout(render, 0));
+})();
+
+/* ---------- Table reconstruction from positioned text (PDF text layer or OCR words) ---------- */
+const IMCD_GRID = (function(){
+  const median = a => { const s = a.slice().sort((x, y) => x - y); return s.length ? s[Math.floor(s.length / 2)] : 0; };
+  const NUMERIC = /^[\s(+\-–]*(?:[A-Z]{1,3}\s?)?[\d.,]*\d[\d.,]*\s*(?:[A-Z%]{1,3})?\)?$/i;
+
+  // tokens: [{s, x0, x1, yc, h}] in a top-down coordinate system
+  function build(tokens){
+    const toks = tokens.filter(t => t.s && t.s.trim() && t.x1 > t.x0 && t.h > 0);
+    if(!toks.length) return [];
+    const medH = median(toks.map(t => t.h));
+
+    /* 1. lines: tokens whose vertical centres are within half a text height */
+    toks.sort((a, b) => a.yc - b.yc || a.x0 - b.x0);
+    const lines = [];
+    for(const t of toks){
+      const L = lines[lines.length - 1];
+      if(L && Math.abs(t.yc - L.ref) <= 0.5 * Math.min(t.h, L.h)) L.toks.push(t);
+      else lines.push({ ref: t.yc, h: t.h, toks: [t] });
+    }
+
+    /* 2. chunks: join fragments of the same phrase (small horizontal gaps) */
+    for(const L of lines){
+      L.toks.sort((a, b) => a.x0 - b.x0);
+      const chunks = [];
+      for(const t of L.toks){
+        const c = chunks[chunks.length - 1];
+        const hh = c ? Math.min(c.h, t.h) : t.h;
+        const gap = c ? t.x0 - c.x1 : Infinity;
+        if(c && gap < 0.75 * hh){
+          c.s = c.s.replace(/\s+$/, '') + (t.word || gap > 0.2 * hh ? ' ' : '') + t.s.replace(/^\s+/, '');
+          c.x1 = Math.max(c.x1, t.x1);
+        } else {
+          chunks.push({ s: t.s, x0: t.x0, x1: t.x1, h: t.h });
+        }
+      }
+      chunks.forEach(c => c.s = c.s.trim().replace(/\s{2,}/g, ' '));
+      L.chunks = chunks.filter(c => c.s);
+    }
+
+    /* 3. column bands, learned from the "table-like" lines (many chunks) */
+    const maxC = Math.max(...lines.map(L => L.chunks.length));
+    let bands = [];
+    if(maxC >= 2){
+      const thr = maxC >= 3 ? Math.max(3, Math.ceil(maxC * 0.6)) : 2;
+      const bandLines = lines.filter(L => L.chunks.length >= thr);
+      const iv = [];
+      bandLines.forEach((L, li) => L.chunks.forEach(c => iv.push({ x0: c.x0, x1: c.x1, li, num: NUMERIC.test(c.s) })));
+      iv.sort((a, b) => a.x0 - b.x0);
+      const tol = 0.15 * medH;
+      for(const v of iv){
+        const B = bands[bands.length - 1];
+        if(B && v.x0 <= B.x1 + tol){ B.x1 = Math.max(B.x1, v.x1); B.lines.add(v.li); B.allNum = B.allNum && v.num; B.anyNum = B.anyNum || v.num; }
+        else bands.push({ x0: v.x0, x1: v.x1, lines: new Set([v.li]), allNum: v.num, anyNum: v.num });
+      }
+      /* centred header + right-aligned numbers that never share a line -> one column */
+      for(let i = 0; i < bands.length - 1; i++){
+        const A = bands[i], B = bands[i + 1];
+        const shared = [...A.lines].some(l => B.lines.has(l));
+        if(!shared && !A.anyNum && B.allNum && B.x0 - A.x1 < 1.5 * medH){
+          A.x1 = B.x1; B.lines.forEach(l => A.lines.add(l)); A.allNum = false; A.anyNum = true;
+          bands.splice(i + 1, 1); i--;
+        }
+      }
+    }
+    if(!bands.length) bands = [{ x0: -Infinity, x1: Infinity }];
+
+    /* 4. place every chunk of every line into a band */
+    const rows = [];
+    let prevRef = null;
+    for(const L of lines){
+      if(prevRef !== null && L.ref - prevRef > 2.4 * medH) rows.push([]);   // keep visual paragraph breaks
+      prevRef = L.ref;
+      const row = [];
+      let last = -1;
+      for(const c of L.chunks){
+        let idx = -1, best = Infinity;
+        for(let i = 0; i < bands.length; i++){
+          const b = bands[i];
+          if(c.x0 < b.x1 && c.x1 > b.x0){ idx = i; break; }         // leftmost overlapping band
+          const d = c.x1 <= b.x0 ? b.x0 - c.x1 : c.x0 - b.x1;
+          if(d < best){ best = d; idx = i; }
+        }
+        if(idx < last) idx = last;
+        row[idx] = row[idx] ? row[idx] + ' ' + c.s : c.s;
+        last = idx;
+      }
+      for(let i = 0; i < row.length; i++) if(row[i] === undefined) row[i] = '';
+      rows.push(row);
+    }
+
+    /* 5. drop columns that are empty everywhere */
+    const width = Math.max(0, ...rows.map(r => r.length));
+    const used = [];
+    for(let i = 0; i < width; i++) used[i] = rows.some(r => r[i]);
+    return rows.map(r => { const o = []; for(let i = 0; i < width; i++) if(used[i]) o.push(r[i] || ''); while(o.length && !o[o.length - 1]) o.pop(); return o; });
+  }
+
+  /* ---- numbers: detect VN (1.234,5) vs US (1,234.5) per document ---- */
+  function detectLocale(rows){
+    let vn = 0, us = 0;
+    rows.forEach(r => r.forEach(v => {
+      const s = (v || '').replace(/\s/g, '');
+      if(/\d\.\d{3}\.\d{3}/.test(s) || /\d\.\d{3},\d/.test(s) || /^\d{1,3}(\.\d{3})+,\d+$/.test(s)) vn++;
+      if(/\d,\d{3},\d{3}/.test(s) || /\d,\d{3}\.\d/.test(s) || /^\d{1,3}(,\d{3})+\.\d+$/.test(s)) us++;
+    }));
+    return vn > us ? 'vn' : us > vn ? 'us' : '';
+  }
+  function toNumber(v, loc){
+    const s = (v || '').trim();
+    if(!s || !/^[-+]?[\d.,]+$/.test(s) || !/\d/.test(s)) return null;
+    const neg = s[0] === '-'; const body = s.replace(/^[-+]/, '');
+    if(/^0\d/.test(body)) return null;                     // leading zero: phone, tax code, item code
+    if(body.replace(/\D/g, '').length > 15) return null;
+    let norm;
+    if(/^\d+$/.test(body)) norm = body;
+    else if(loc === 'vn' && /^\d{1,3}(\.\d{3})*(,\d+)?$/.test(body)) norm = body.replace(/\./g, '').replace(',', '.');
+    else if(loc === 'us' && /^\d{1,3}(,\d{3})*(\.\d+)?$/.test(body)) norm = body.replace(/,/g, '');
+    else if(/^\d+[.,]\d+$/.test(body) && !/^\d{1,3}[.,]\d{3}$/.test(body)) norm = body.replace(',', '.');   // 12.5 / 12,5
+    else return null;                                        // ambiguous, e.g. "1.650" with unknown format
+    const n = Number(norm);
+    return isFinite(n) ? (neg ? -n : n) : null;
+  }
+
+  return { build, detectLocale, toNumber, median };
+})();
+if(typeof module !== 'undefined') module.exports = IMCD_GRID;
+
+/* ---------- Minimal .xlsx writer (no external library): inline strings + numbers, column widths ---------- */
+const IMCD_XLSX = (function(){
+  const enc = new TextEncoder();
+  const CRC = (() => { const t = new Uint32Array(256); for(let n = 0; n < 256; n++){ let c = n; for(let k = 0; k < 8; k++) c = c & 1 ? 0xEDB88320 ^ (c >>> 1) : c >>> 1; t[n] = c >>> 0; } return t; })();
+  function crc32(b){ let c = 0xFFFFFFFF; for(let i = 0; i < b.length; i++) c = CRC[(c ^ b[i]) & 0xFF] ^ (c >>> 8); return (c ^ 0xFFFFFFFF) >>> 0; }
+  const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F]/g, '');
+  function colName(i){ let s = ''; i++; while(i > 0){ const m = (i - 1) % 26; s = String.fromCharCode(65 + m) + s; i = Math.floor((i - 1) / 26); } return s; }
+
+  function zip(files){   // files: [{name, data:Uint8Array}] -> Blob (STORE, no compression)
+    const parts = [], central = []; let offset = 0;
+    const d = new Date();
+    const dosTime = (d.getHours() << 11) | (d.getMinutes() << 5) | (d.getSeconds() >> 1);
+    const dosDate = ((d.getFullYear() - 1980) << 9) | ((d.getMonth() + 1) << 5) | d.getDate();
+    for(const f of files){
+      const name = enc.encode(f.name), crc = crc32(f.data), size = f.data.length;
+      const lh = new DataView(new ArrayBuffer(30));
+      lh.setUint32(0, 0x04034b50, true); lh.setUint16(4, 20, true); lh.setUint16(6, 0x0800, true); lh.setUint16(8, 0, true);
+      lh.setUint16(10, dosTime, true); lh.setUint16(12, dosDate, true); lh.setUint32(14, crc, true);
+      lh.setUint32(18, size, true); lh.setUint32(22, size, true); lh.setUint16(26, name.length, true); lh.setUint16(28, 0, true);
+      parts.push(new Uint8Array(lh.buffer), name, f.data);
+      const ch = new DataView(new ArrayBuffer(46));
+      ch.setUint32(0, 0x02014b50, true); ch.setUint16(4, 20, true); ch.setUint16(6, 20, true); ch.setUint16(8, 0x0800, true); ch.setUint16(10, 0, true);
+      ch.setUint16(12, dosTime, true); ch.setUint16(14, dosDate, true); ch.setUint32(16, crc, true);
+      ch.setUint32(20, size, true); ch.setUint32(24, size, true); ch.setUint16(28, name.length, true);
+      ch.setUint32(42, offset, true);
+      central.push(new Uint8Array(ch.buffer), name);
+      offset += 30 + name.length + size;
+    }
+    const cdSize = central.reduce((a, b) => a + b.length, 0);
+    const end = new DataView(new ArrayBuffer(22));
+    end.setUint32(0, 0x06054b50, true); end.setUint16(8, files.length, true); end.setUint16(10, files.length, true);
+    end.setUint32(12, cdSize, true); end.setUint32(16, offset, true);
+    return new Blob([...parts, ...central, new Uint8Array(end.buffer)], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+  }
+
+  function safeSheetNames(names){
+    const used = new Set();
+    return names.map(n => {
+      let base = String(n || 'Sheet').replace(/[\[\]:*?\/\\]/g, '_').replace(/^'+|'+$/g, '').slice(0, 31) || 'Sheet';
+      let name = base, k = 2;
+      while(used.has(name.toLowerCase())){ const suf = ' (' + k++ + ')'; name = base.slice(0, 31 - suf.length) + suf; }
+      used.add(name.toLowerCase());
+      return name;
+    });
+  }
+
+  // sheets: [{name, rows: [[string|number|null]]}]
+  function build(sheets){
+    const names = safeSheetNames(sheets.map(s => s.name));
+    const files = [];
+    const add = (name, xml) => files.push({ name, data: enc.encode(xml) });
+    add('[Content_Types].xml', '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' +
+      '<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types">' +
+      '<Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/>' +
+      '<Default Extension="xml" ContentType="application/xml"/>' +
+      '<Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/>' +
+      '<Override PartName="/xl/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml"/>' +
+      sheets.map((s, i) => '<Override PartName="/xl/worksheets/sheet' + (i + 1) + '.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/>').join('') +
+      '</Types>');
+    add('_rels/.rels', '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">' +
+      '<Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="xl/workbook.xml"/></Relationships>');
+    add('xl/workbook.xml', '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"><sheets>' +
+      names.map((n, i) => '<sheet name="' + esc(n) + '" sheetId="' + (i + 1) + '" r:id="rId' + (i + 1) + '"/>').join('') + '</sheets></workbook>');
+    add('xl/_rels/workbook.xml.rels', '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">' +
+      sheets.map((s, i) => '<Relationship Id="rId' + (i + 1) + '" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet' + (i + 1) + '.xml"/>').join('') +
+      '<Relationship Id="rId' + (sheets.length + 1) + '" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/></Relationships>');
+    // style 0 = default, 1 = decimal #,##0.###, 2 = integer #,##0
+    add('xl/styles.xml', '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">' +
+      '<numFmts count="1"><numFmt numFmtId="164" formatCode="#,##0.###"/></numFmts>' +
+      '<fonts count="1"><font><sz val="11"/><name val="Calibri"/></font></fonts>' +
+      '<fills count="2"><fill><patternFill patternType="none"/></fill><fill><patternFill patternType="gray125"/></fill></fills>' +
+      '<borders count="1"><border><left/><right/><top/><bottom/><diagonal/></border></borders>' +
+      '<cellStyleXfs count="1"><xf numFmtId="0" fontId="0" fillId="0" borderId="0"/></cellStyleXfs>' +
+      '<cellXfs count="3"><xf numFmtId="0" fontId="0" fillId="0" borderId="0" xfId="0"/><xf numFmtId="164" fontId="0" fillId="0" borderId="0" xfId="0" applyNumberFormat="1"/><xf numFmtId="3" fontId="0" fillId="0" borderId="0" xfId="0" applyNumberFormat="1"/></cellXfs>' +
+      '<cellStyles count="1"><cellStyle name="Normal" xfId="0" builtinId="0"/></cellStyles>' +
+      '</styleSheet>');
+    sheets.forEach((s, si) => {
+      const rows = s.rows || [];
+      const width = Math.max(1, ...rows.map(r => r.length));
+      const colW = [];
+      for(let c = 0; c < width; c++){
+        let w = 6;
+        rows.forEach(r => { const v = r[c]; if(v !== null && v !== undefined && v !== '') w = Math.max(w, Math.min(60, String(typeof v === 'number' ? v.toLocaleString('en-US') : v).length + 2)); });
+        colW.push(w);
+      }
+      let xml = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><cols>' +
+        colW.map((w, i) => '<col min="' + (i + 1) + '" max="' + (i + 1) + '" width="' + w + '" customWidth="1"/>').join('') + '</cols><sheetData>';
+      rows.forEach((r, ri) => {
+        xml += '<row r="' + (ri + 1) + '">';
+        r.forEach((v, ci) => {
+          if(v === null || v === undefined || v === '') return;
+          const ref = colName(ci) + (ri + 1);
+          if(typeof v === 'number' && isFinite(v)) xml += '<c r="' + ref + '" s="' + (Number.isInteger(v) ? 2 : 1) + '"><v>' + v + '</v></c>';
+          else xml += '<c r="' + ref + '" t="inlineStr"><is><t xml:space="preserve">' + esc(v) + '</t></is></c>';
+        });
+        xml += '</row>';
+      });
+      xml += '</sheetData></worksheet>';
+      add('xl/worksheets/sheet' + (si + 1) + '.xml', xml);
+    });
+    return zip(files);
+  }
+  return { build, colName };
+})();
+if(typeof module !== 'undefined') module.exports = IMCD_XLSX;
+
+
+/* ---------- Shared loaders: OCR (Tesseract.js) + PDF.js, both from cdn.jsdelivr.net on first use ---------- */
+function loadScriptOnce(src){
+  window.__imcdScripts = window.__imcdScripts || {};
+  if(window.__imcdScripts[src]) return window.__imcdScripts[src];
+  const p = new Promise((resolve, reject) => {
+    const sc = document.createElement('script');
+    sc.src = src; sc.async = true;
+    sc.onload = () => resolve();
+    sc.onerror = () => { delete window.__imcdScripts[src]; sc.remove(); reject(new Error('NET')); };
+    document.head.appendChild(sc);
+  });
+  window.__imcdScripts[src] = p;
+  return p;
+}
+
+const IMCD_OCR = (function(){
+  const CFG = Object.assign({
+    lib: 'https://cdn.jsdelivr.net/npm/tesseract.js@5.1.1/dist/tesseract.min.js',
+    langs: ['vie'],
+    paths: {}
+  }, window.__OCR_OVERRIDE || {});
+  let worker = null, onProg = null, queue = Promise.resolve();
+
+  async function getWorker(){
+    if(worker) return worker;
+    await loadScriptOnce(CFG.lib);
+    worker = await Tesseract.createWorker(CFG.langs, 1, Object.assign({
+      logger: m => { if(onProg && m.status === 'recognizing text') onProg(m.progress); }
+    }, CFG.paths));
+    await worker.setParameters({ preserve_interword_spaces: '1' });
+    return worker;
+  }
+
+  /* grayscale, invert dark-mode screenshots, upscale small images (OCR needs ~25px+ text) */
+  function prepare(src){
+    const w0 = src.width, h0 = src.height;
+    const k = Math.max(w0, h0) < 1600 ? Math.min(3, 2600 / Math.max(w0, h0)) : 1;
+    const c = document.createElement('canvas');
+    const W = c.width = Math.round(w0 * k), H = c.height = Math.round(h0 * k);
+    const g = c.getContext('2d');
+    g.fillStyle = '#fff'; g.fillRect(0, 0, W, H);
+    g.imageSmoothingQuality = 'high';
+    g.drawImage(src, 0, 0, W, H);
+    const img = g.getImageData(0, 0, W, H), d = img.data;
+    const N = W * H, a = new Float32Array(N);
+    let sum = 0;
+    for(let i = 0; i < N; i++){ const j = i * 4; a[i] = 0.299 * d[j] + 0.587 * d[j + 1] + 0.114 * d[j + 2]; sum += a[i]; }
+    if(sum / N < 110){
+      for(let i = 0; i < N; i++) a[i] = 255 - a[i];           // dark-mode screenshot
+    } else {
+      for(let i = 0; i < N; i++){                              // light coloured cell fills (Excel header blue...) -> near white
+        if(a[i] <= 100) continue;
+        const j = i * 4, mx = Math.max(d[j], d[j + 1], d[j + 2]), mn = Math.min(d[j], d[j + 1], d[j + 2]);
+        if(mx > 0 && (mx - mn) / mx > 0.25) a[i] = mx;
+      }
+    }
+    for(let i = 0; i < N; i++) if(a[i] > 200) a[i] = 255;   // flatten paper / light fills and JPEG speckle
+    removeGrayBlobs(a, d, W, H, k);
+    const mask = removeRules(a, W, H, k);
+    for(let i = 0; i < N; i++){ const j = i * 4, v = mask[i] ? 255 : a[i]; d[j] = d[j + 1] = d[j + 2] = v; }
+    g.putImageData(img, 0, 0);
+    return c;
+  }
+
+  /* small mid-grey shapes with no dark core = UI icons (Excel filter arrows ▼), not text */
+  function removeGrayBlobs(a, d, W, H, k){
+    const N = W * H, seen = new Uint8Array(N), stack = new Int32Array(N);
+    const grey = i => { const j = i * 4, mx = Math.max(d[j], d[j + 1], d[j + 2]), mn = Math.min(d[j], d[j + 1], d[j + 2]); return mx === 0 || (mx - mn) / mx < 0.2; };
+    const ok = i => a[i] < 170 && grey(i);   // coloured text (links, red notes) is never touched
+    const maxW = Math.round(14 * k), maxH = Math.round(9 * k);
+    for(let i0 = 0; i0 < N; i0++){
+      if(seen[i0] || !ok(i0)) continue;
+      let sp = 0, n = 0, minV = 255, x0 = W, x1 = 0, y0 = H, y1 = 0, big = false;
+      stack[sp++] = i0; seen[i0] = 1;
+      const comp = [];
+      while(sp){
+        const i = stack[--sp]; comp.push(i); n++;
+        const x = i % W, y = (i - x) / W;
+        if(a[i] < minV) minV = a[i];
+        if(x < x0) x0 = x; if(x > x1) x1 = x; if(y < y0) y0 = y; if(y > y1) y1 = y;
+        if(x1 - x0 > maxW || y1 - y0 > maxH) big = true;
+        if(x > 0 && !seen[i - 1] && ok(i - 1)){ seen[i - 1] = 1; stack[sp++] = i - 1; }
+        if(x < W - 1 && !seen[i + 1] && ok(i + 1)){ seen[i + 1] = 1; stack[sp++] = i + 1; }
+        if(y > 0 && !seen[i - W] && ok(i - W)){ seen[i - W] = 1; stack[sp++] = i - W; }
+        if(y < H - 1 && !seen[i + W] && ok(i + W)){ seen[i + W] = 1; stack[sp++] = i + W; }
+      }
+      if(!big && minV > 85 && n > 4 * k * k) for(const i of comp) a[i] = 255;
+    }
+  }
+
+  /* Table borders: Tesseract treats ruled boxes as pictures and skips the text inside, so erase them.
+     Only thin, long runs count; strokes of letters crossing a rule are kept; verticals must meet a horizontal rule. */
+  function removeRules(a, W, H, k){
+    const N = W * H, dark = new Uint8Array(N);
+    for(let i = 0; i < N; i++) dark[i] = a[i] < 140 ? 1 : 0;
+    const T = Math.max(4, Math.round(2.5 * k)), minH = Math.max(40, Math.round(W * 0.04)), minV = Math.max(25, Math.round(8 * k));
+    const longV = Math.max(120, H * 0.25);
+    function runsH(src){
+      const m = new Uint8Array(N);
+      for(let y = 0; y < H; y++){
+        let x = 0; const row = y * W;
+        while(x < W){
+          if(!src[row + x]){ x++; continue; }
+          const s = x; while(x < W && src[row + x]) x++;
+          if(x - s < minH) continue;
+          let thinCount = 0;
+          const thin = new Uint8Array(x - s);
+          for(let xx = s; xx < x; xx++){
+            const up = y - T >= 0 ? src[(y - T) * W + xx] : 0, dn = y + T < H ? src[(y + T) * W + xx] : 0;
+            if(!up && !dn){ thin[xx - s] = 1; thinCount++; }
+          }
+          if(thinCount <= (x - s) / 2) continue;
+          for(let yy = Math.max(0, y - 1); yy <= Math.min(H - 1, y + 1); yy++)
+            for(let xx = s; xx < x; xx++) if(thin[xx - s]) m[yy * W + xx] = 1;
+        }
+      }
+      return m;
+    }
+    function runsV(src, hm){
+      const m = new Uint8Array(N);
+      for(let x = 0; x < W; x++){
+        let y = 0;
+        while(y < H){
+          if(!src[y * W + x]){ y++; continue; }
+          const s = y; while(y < H && src[y * W + x]) y++;
+          const L = y - s;
+          if(L < minV) continue;
+          let thinCount = 0;
+          const thin = new Uint8Array(L);
+          for(let yy = s; yy < y; yy++){
+            const lf = x - T >= 0 ? src[yy * W + x - T] : 0, rt = x + T < W ? src[yy * W + x + T] : 0;
+            if(!lf && !rt){ thin[yy - s] = 1; thinCount++; }
+          }
+          if(thinCount <= L / 2) continue;
+          let touch = false;
+          for(let yy = Math.max(0, s - 3); yy <= Math.min(H - 1, s + 3) && !touch; yy++) if(hm[yy * W + x]) touch = true;
+          for(let yy = Math.max(0, y - 4); yy <= Math.min(H - 1, y + 2) && !touch; yy++) if(hm[yy * W + x]) touch = true;
+          if(!touch && L < longV) continue;
+          for(let xx = Math.max(0, x - 1); xx <= Math.min(W - 1, x + 1); xx++)
+            for(let yy = s; yy < y; yy++) if(thin[yy - s]) m[yy * W + xx] = 1;
+        }
+      }
+      return m;
+    }
+    const hm = runsH(dark);
+    const src2 = new Uint8Array(N); for(let i = 0; i < N; i++) src2[i] = dark[i] && !hm[i] ? 1 : 0;
+    const vm = runsV(src2, hm);
+    const src3 = new Uint8Array(N); for(let i = 0; i < N; i++) src3[i] = dark[i] && !vm[i] ? 1 : 0;
+    const hm2 = runsH(src3);
+    const mask = new Uint8Array(N);
+    for(let i = 0; i < N; i++) mask[i] = hm[i] | vm[i] | hm2[i];
+    return mask;
+  }
+
+  /* serialised so the PDF tab and the Excel tabs can share one worker */
+  function run(canvas, progress, output){
+    const job = queue.then(async () => {
+      const w = await getWorker();
+      onProg = progress || null;
+      try { return (await w.recognize(canvas, {}, output || { text: true })).data; }
+      finally { onProg = null; }
+    });
+    queue = job.catch(() => {});
+    return job.catch(err => { if(err && err.message !== 'NET' && worker){ try { worker.terminate(); } catch(e){} worker = null; } throw err; });
+  }
+
+  /* OCR -> positioned word tokens for IMCD_GRID */
+  async function tokens(canvas, progress){
+    const data = await run(canvas, progress, { tsv: true });
+    const words = [];
+    (data.tsv || '').split('\n').forEach(line => {
+      const f = line.split('\t');
+      if(f.length < 12 || f[0] !== '5') return;
+      const text = f.slice(11).join('\t').trim();
+      if(!text || +f[10] < 0) return;
+      const x = +f[6], y = +f[7], w = +f[8], h = +f[9];
+      const clean = text.replace(/^[|¦!]+|[|¦]+$/g, '').trim();          // leftovers of erased table borders
+      if(!clean || /^[|¦!\\/_~^=`'"—–.,:;]+$/.test(clean)) return;
+      words.push({ s: clean, x0: x, x1: x + w, yc: y + h / 2, h, word: true });
+    });
+    const medH = IMCD_GRID.median(words.map(t => t.h)) || 10;
+    words.forEach(t => t.h = Math.max(t.h, medH));   // short words ("a", "-") must not break lines
+    return words;
+  }
+  return { prepare, run, tokens };
+})();
+
+const IMCD_PDF = (function(){
+  const CFG = Object.assign({ base: 'https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/' }, window.__PDFJS_OVERRIDE || {});
+  async function lib(){
+    await loadScriptOnce(CFG.base + 'build/pdf.min.js');
+    const L = window.pdfjsLib;
+    L.GlobalWorkerOptions.workerSrc = CFG.base + 'build/pdf.worker.min.js';
+    return L;
+  }
+  async function open(file){
+    const L = await lib();
+    const data = new Uint8Array(await file.arrayBuffer());
+    return L.getDocument({ data, cMapUrl: CFG.base + 'cmaps/', cMapPacked: true, standardFontDataUrl: CFG.base + 'standard_fonts/' }).promise;
+  }
+  async function pageTokens(page){
+    const vp = page.getViewport({ scale: 1 });
+    const tc = await page.getTextContent();
+    return tc.items.filter(i => i.str && i.str.trim()).map(i => {
+      const t = i.transform;
+      const h = i.height || Math.hypot(t[2], t[3]) || 8;
+      return { s: i.str, x0: t[4], x1: t[4] + (i.width || h * i.str.length * 0.5), yc: vp.height - t[5] - h * 0.35, h };
+    });
+  }
+  async function pageCanvas(page, scale){
+    const vp = page.getViewport({ scale });
+    const c = document.createElement('canvas'); c.width = Math.ceil(vp.width); c.height = Math.ceil(vp.height);
+    const g = c.getContext('2d'); g.fillStyle = '#fff'; g.fillRect(0, 0, c.width, c.height);
+    await page.render({ canvasContext: g, viewport: vp }).promise;
+    return c;
+  }
+  return { open, pageTokens, pageCanvas };
+})();
+
+/* ---------- Ảnh -> Excel / PDF -> Excel views ---------- */
+(function(){
+  const pad = n => String(n).padStart(2, '0');
+  const fmt = (str, vars) => str.replace(/\{(\w+)\}/g, (m, k) => (k in vars ? vars[k] : m));
+  const stamp = () => { const d = new Date(); return 'PO_' + d.getFullYear() + pad(d.getMonth() + 1) + pad(d.getDate()) + '_' + pad(d.getHours()) + pad(d.getMinutes()); };
+  const escH = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
+  function loadImg(file){
+    return new Promise((resolve, reject) => {
+      const url = URL.createObjectURL(file); const img = new Image();
+      img.onload = () => { const c = document.createElement('canvas'); c.width = img.naturalWidth; c.height = img.naturalHeight;
+        const g = c.getContext('2d'); g.fillStyle = '#fff'; g.fillRect(0, 0, c.width, c.height); g.drawImage(img, 0, 0); URL.revokeObjectURL(url); resolve(c); };
+      img.onerror = () => { URL.revokeObjectURL(url); reject(new Error('decode')); };
+      img.src = url;
+    });
+  }
+
+  /* OCR often reads the small VN decimal comma as a dot: 798.795.00 -> 798.795,00 ; 600.0000 -> 600,0000 */
+  function fixOcrVn(v){
+    const s = (v || '').trim();
+    if(/^\d{1,3}(\.\d{3})+\.\d{1,2}$/.test(s) || /^\d{1,3}\.\d{4,}$/.test(s) || /^\d{4,}\.\d{1,2}$/.test(s)) return s.replace(/\.(\d+)$/, ',$1');
+    return v;
+  }
+
+  function setup(view){
+    const mode = view.dataset.mode, p = view.dataset.prefix;
+    const $ = id => document.getElementById(p + id);
+    const drop = $('Drop'), input = $('Input'), filesEl = $('Files'), numCb = $('Num'), locSel = $('Loc');
+    const tabsEl = $('Tabs'), prevEl = $('Preview'), emptyEl = $('Empty'), nameIn = $('Name');
+    const copyBtn = $('Copy'), exportBtn = $('Export'), statusEl = $('Status');
+    let files = [], seq = 0, active = 0, busy = false;
+    const isActive = () => view.classList.contains('active');
+    const setStatus = (msg, kind) => { statusEl.textContent = msg || ''; statusEl.className = 'pdf-status' + (kind ? ' ' + kind : ''); };
+    const accepts = f => mode === 'img'
+      ? (f.type.startsWith('image/') || /\.(jpe?g|png|webp|gif|bmp)$/i.test(f.name || ''))
+      : (f.type === 'application/pdf' || /\.pdf$/i.test(f.name || ''));
+
+    function addFiles(list){
+      const arr = Array.from(list || []);
+      const ok = arr.filter(accepts);
+      if(arr.length && !ok.length){ setStatus(t(mode === 'img' ? 'xlBadImg' : 'xlBadPdf'), 'err'); return; }
+      ok.forEach(f => files.push({ id: ++seq, file: f, name: f.name || ('image-' + seq + '.png'), status: 'wait', pages: [], ocr: false }));
+      if(ok.length){ setStatus(''); renderFiles(); processQueue(); }
+    }
+
+    async function processQueue(){
+      if(busy) return; busy = true;
+      try {
+        for(const f of files){
+          if(f.status !== 'wait' || !files.includes(f)) continue;   // skip files cleared by Làm mới
+          f.status = 'run'; renderFiles();
+          try {
+            if(mode === 'img'){
+              const c = await loadImg(f.file);
+              const toks = await IMCD_OCR.tokens(IMCD_OCR.prepare(c), pr => setStatus(fmt(t('xlOcrProg'), { name: f.name, pct: Math.round(pr * 100) })));
+              f.pages = [IMCD_GRID.build(toks)]; f.ocr = true;
+            } else {
+              setStatus(fmt(t('xlReading'), { name: f.name }));
+              const doc = await IMCD_PDF.open(f.file);
+              for(let i = 1; i <= doc.numPages; i++){
+                const page = await doc.getPage(i);
+                let toks = await IMCD_PDF.pageTokens(page);
+                if(toks.length < 3){   // scanned page -> OCR the rendered page
+                  f.ocr = true;
+                  const c = await IMCD_PDF.pageCanvas(page, 2);
+                  toks = await IMCD_OCR.tokens(IMCD_OCR.prepare(c), pr => setStatus(fmt(t('xlOcrPage'), { name: f.name, i, n: doc.numPages, pct: Math.round(pr * 100) })));
+                }
+                f.pages.push(IMCD_GRID.build(toks));
+              }
+              doc.destroy();
+            }
+            f.status = 'done';
+          } catch(err){
+            f.status = 'err';
+            f.err = err && err.message === 'NET' ? t('xlNetErr') : (err && err.message === 'decode' ? t('pdfBadFile').replace('{n}', '1') : String((err && err.message) || err));
+          }
+          renderFiles(); renderSheets();
+        }
+        if(!files.length){ return; }
+        const errs = files.filter(f => f.status === 'err');
+        const done = files.filter(f => f.status === 'done');
+        if(errs.length) setStatus(errs[errs.length - 1].err, 'err');
+        else if(done.length) setStatus(fmt(t('xlReady'), { n: sheets().length }), 'ok');
+      } finally {
+        busy = false;
+        if(files.some(f => f.status === 'wait')) processQueue();   // files added after a reset mid-run
+      }
+    }
+
+    function resetAll(scroll){
+      files = []; active = 0; nameIn.value = ''; input.value = '';
+      renderFiles(); renderSheets(); setStatus('');
+      if(scroll) window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+    $('ResetBtn').addEventListener('click', () => resetAll(true));
+
+    function renderFiles(){
+      filesEl.innerHTML = files.map(f => {
+        const st = f.status === 'run' ? '<span class="xl-st run">' + t('xlStRun') + '</span>'
+          : f.status === 'err' ? '<span class="xl-st err" title="' + escH(f.err || '') + '">' + t('xlStErr') + '</span>'
+          : f.status === 'done' ? '<span class="xl-st ok">' + fmt(t('xlStDone'), { n: f.pages.length }) + (f.ocr ? ' · OCR' : '') + '</span>'
+          : '<span class="xl-st">' + t('xlStWait') + '</span>';
+        return '<div class="xl-file" data-id="' + f.id + '"><span class="xl-fname" title="' + escH(f.name) + '">' + escH(f.name) + '</span>' + st +
+          '<button type="button" class="xl-del" title="' + t('pdfDelete') + '"' + (f.status === 'run' ? ' disabled' : '') + '>✕</button></div>';
+      }).join('') + (files.length > 1 ? '<button type="button" class="xl-clear" data-act="clear">🗑 ' + t('pdfClear') + '</button>' : '');
+    }
+    filesEl.addEventListener('click', e => {
+      if(e.target.closest('[data-act="clear"]')){ resetAll(false); return; }
+      const b = e.target.closest('.xl-del'); if(!b || b.disabled) return;
+      const id = +b.closest('.xl-file').dataset.id;
+      files = files.filter(f => f.id !== id); active = 0; renderFiles(); renderSheets();
+    });
+
+    function base(name){ return name.replace(/\.[^.]+$/, ''); }
+    function sheets(){
+      const out = [];
+      const done = files.filter(f => f.status === 'done');
+      let imgNo = 0;
+      done.forEach(f => f.pages.forEach((rows, i) => {
+        let name;
+        if(mode === 'img') name = t('xlSheetImg') + ' ' + (++imgNo);
+        else if(done.length === 1) name = t('ocrPage') + ' ' + (i + 1);
+        else name = base(f.name).slice(0, 22) + (f.pages.length > 1 ? '_p' + (i + 1) : '');
+        const loc = locSel.value === 'auto' ? IMCD_GRID.detectLocale(rows) : locSel.value;
+        if(f.ocr && loc === 'vn') rows = rows.map(r => r.map(fixOcrVn));
+        const conv = rows.map(r => r.map(v => { if(!numCb.checked) return v; const n = IMCD_GRID.toNumber(v, loc); return n === null ? v : n; }));
+        out.push({ name, rows: conv, raw: rows });
+      }));
+      return out;
+    }
+
+    function renderSheets(){
+      const sh = sheets();
+      if(active >= sh.length) active = 0;
+      emptyEl.style.display = sh.length ? 'none' : 'block';
+      copyBtn.disabled = exportBtn.disabled = !sh.length;
+      tabsEl.innerHTML = sh.length > 1 ? sh.map((s, i) => '<button type="button" class="xl-tab' + (i === active ? ' active' : '') + '" data-i="' + i + '">' + escH(s.name) + '</button>').join('') : '';
+      if(!sh.length){ prevEl.innerHTML = ''; refreshName(); return; }
+      const s = sh[active];
+      const width = Math.max(1, ...s.rows.map(r => r.length));
+      let html = '<table class="xl-table"><thead><tr><th></th>';
+      for(let c = 0; c < width; c++) html += '<th>' + IMCD_XLSX.colName(c) + '</th>';
+      html += '</tr></thead><tbody>';
+      s.rows.slice(0, 400).forEach((r, ri) => {
+        html += '<tr><th>' + (ri + 1) + '</th>';
+        for(let c = 0; c < width; c++){
+          const v = r[c];
+          html += typeof v === 'number' ? '<td class="num" title="' + escH(s.raw[ri][c]) + '">' + v.toLocaleString('en-US', { maximumFractionDigits: 6 }) + '</td>'
+            : '<td>' + escH(v || '') + '</td>';
+        }
+        html += '</tr>';
+      });
+      html += '</tbody></table>';
+      if(s.rows.length > 400) html += '<div class="hint">' + fmt(t('xlMoreRows'), { n: s.rows.length - 400 }) + '</div>';
+      prevEl.innerHTML = html;
+      refreshName();
+    }
+    tabsEl.addEventListener('click', e => { const b = e.target.closest('.xl-tab'); if(!b) return; active = +b.dataset.i; renderSheets(); });
+    numCb.addEventListener('change', renderSheets);
+    locSel.addEventListener('change', renderSheets);
+
+    function autoName(){ const done = files.filter(f => f.status === 'done'); return done.length === 1 ? base(done[0].name) : stamp(); }
+    function refreshName(){ nameIn.placeholder = autoName(); }
+    setInterval(refreshName, 30000);
+
+    copyBtn.addEventListener('click', async () => {
+      const s = sheets()[active]; if(!s) return;
+      const tsv = s.raw.map(r => r.map(v => String(v || '').replace(/[\t\n]/g, ' ')).join('\t')).join('\n');
+      let ok = false;
+      try { await navigator.clipboard.writeText(tsv); ok = true; } catch(e){
+        const ta = document.createElement('textarea'); ta.value = tsv; document.body.appendChild(ta); ta.select();
+        try { ok = document.execCommand('copy'); } catch(e2){} ta.remove();
+      }
+      if(ok){ const sp = copyBtn.querySelector('span'); copyBtn.classList.add('copied'); sp.textContent = t('ocrCopied');
+        setTimeout(() => { copyBtn.classList.remove('copied'); sp.textContent = t('xlCopy'); }, 1600); }
+    });
+
+    function exportXlsx(){
+      const sh = sheets(); if(!sh.length) return;
+      let n = (nameIn.value || '').trim().replace(/\.xlsx$/i, '').replace(/[\\/:*?"<>|]+/g, '_').trim() || autoName();
+      n += '.xlsx';
+      const blob = IMCD_XLSX.build(sh.map(s => ({ name: s.name, rows: s.rows })));
+      const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = n;
+      document.body.appendChild(a); a.click(); a.remove();
+      setTimeout(() => URL.revokeObjectURL(a.href), 10000);
+      setStatus(fmt(t('xlDone'), { name: n, n: sh.length }), 'ok');
+    }
+    exportBtn.addEventListener('click', exportXlsx);
+    nameIn.addEventListener('keydown', e => { if(e.key === 'Enter') exportXlsx(); });
+    document.addEventListener('keydown', e => {
+      if(isActive() && (e.ctrlKey || e.metaKey) && (e.key === 's' || e.key === 'S') && !exportBtn.disabled){ e.preventDefault(); exportXlsx(); }
+    });
+
+    drop.addEventListener('click', () => input.click());
+    drop.addEventListener('keydown', e => { if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); input.click(); } });
+    input.addEventListener('change', () => { addFiles(input.files); input.value = ''; });
+    const hasFiles = e => e.dataTransfer && Array.from(e.dataTransfer.types || []).includes('Files');
+    let depth = 0;
+    window.addEventListener('dragenter', e => { if(isActive() && hasFiles(e)){ depth++; drop.classList.add('drag-over'); } });
+    window.addEventListener('dragleave', e => { if(isActive() && hasFiles(e) && --depth <= 0){ depth = 0; drop.classList.remove('drag-over'); } });
+    window.addEventListener('dragover', e => { if(isActive() && hasFiles(e)) e.preventDefault(); });
+    window.addEventListener('drop', e => { if(!isActive() || !hasFiles(e)) return; e.preventDefault(); depth = 0; drop.classList.remove('drag-over'); addFiles(e.dataTransfer.files); });
+    document.addEventListener('paste', e => {
+      if(!isActive()) return;
+      const cd = e.clipboardData; if(!cd) return;
+      let fl = Array.from(cd.files || []).filter(accepts);
+      if(!fl.length) fl = Array.from(cd.items || []).filter(it => it.kind === 'file').map(it => it.getAsFile()).filter(f => f && accepts(f));
+      if(fl.length){ e.preventDefault(); addFiles(fl); }
+    });
+
+    document.getElementById('langToggle').addEventListener('click', () => setTimeout(() => { renderFiles(); renderSheets(); }, 0));
+    renderSheets();
+  }
+  document.querySelectorAll('.xl-view').forEach(setup);
 })();
 
 </script>
