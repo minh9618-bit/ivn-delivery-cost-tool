@@ -1075,6 +1075,31 @@
   .xl-table thead th{position:sticky;top:0;background:#eef1f7;color:var(--muted);font-weight:700;text-align:center;z-index:1;}
   .xl-table tbody th{background:#f6f8fb;color:#8a95a5;font-weight:400;text-align:right;position:sticky;left:0;}
   .xl-table td.num{text-align:right;background:#eef6fc;color:var(--navy-dark);font-variant-numeric:tabular-nums;}
+  .file-hidden{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);border:0;opacity:0;}
+  label.pdf-drop{display:block;}
+  .touch-only{display:none !important;}
+  .cam-btn{
+    display:flex;align-items:center;justify-content:center;gap:8px;margin-top:10px;
+    border:1.5px solid var(--navy);border-radius:10px;padding:12px;background:#fff;color:var(--navy);
+    font-size:14.5px;font-weight:700;cursor:pointer;-webkit-tap-highlight-color:transparent;
+  }
+  .cam-btn svg{width:20px;height:20px;}
+  .cam-btn:active{background:var(--navy-soft);}
+  @media (hover:none) and (pointer:coarse){
+    .touch-only{display:block !important;}
+    .cam-btn.touch-only{display:flex !important;}
+    #pdfEmailBtn span.touch-only,.reorder-touch{display:inline !important;}
+    .no-touch{display:none !important;}
+    .pdf-drop{padding:22px 14px;}
+    .pdf-drop:active{background:var(--navy-soft);}
+    .pdf-thumb{cursor:default;}
+    .pdf-thumb .pg-actions button{width:34px;height:32px;font-size:15px;}
+    .card-actions button,.cam-btn{min-height:46px;}
+    .xl-del{width:34px;height:32px;}
+    .xl-tab{padding:9px 14px;}
+    .xl-preview{max-height:55vh;-webkit-overflow-scrolling:touch;}
+    #ocrText{font-size:14px;min-height:220px;}
+  }
   .paste-flash{animation:pasteFlash .6s ease;}
   @keyframes pasteFlash{0%{background:#d9ecfa;}100%{background:#fafbfe;}}
 </style>
@@ -1288,15 +1313,18 @@
     <h2><span class="step-num">1</span> <span data-i18n="pdfStep1Title">Thêm ảnh PO</span></h2>
     <p class="sub" data-i18n="pdfStep1Sub">Ảnh được xử lý ngay trên trình duyệt, không tải lên bất kỳ máy chủ nào.</p>
 
-    <div class="pdf-drop" id="pdfDrop" tabindex="0" role="button">
+    <label class="pdf-drop" id="pdfDrop" for="pdfFileInput" tabindex="0">
       <div class="pd-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 16V4"/><path d="M7 9l5-5 5 5"/><path d="M4 16v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3"/></svg></div>
-      <div class="pd-main" data-i18n="pdfDropMain">Kéo thả ảnh vào đây, hoặc bấm để chọn ảnh</div>
-      <div class="pd-sub" data-i18n="pdfDropSub">Hoặc copy ảnh từ Zalo / chụp màn hình (Win + Shift + S) rồi nhấn <span class="kbd">Ctrl</span> + <span class="kbd">V</span> ở bất kỳ đâu trên trang này</div>
-    </div>
-    <input type="file" id="pdfFileInput" accept="image/*" multiple hidden>
+      <div class="pd-main no-touch" data-i18n="pdfDropMain">Kéo thả ảnh vào đây, hoặc bấm để chọn ảnh</div>
+      <div class="pd-main touch-only" data-i18n="pdfDropTouch">Chạm để chọn ảnh từ thư viện</div>
+      <div class="pd-sub no-touch" data-i18n="pdfDropSub">Hoặc copy ảnh từ Zalo / chụp màn hình (Win + Shift + S) rồi nhấn <span class="kbd">Ctrl</span> + <span class="kbd">V</span> ở bất kỳ đâu trên trang này</div>
+    </label>
+    <input type="file" id="pdfFileInput" class="file-hidden" accept="image/*" multiple>
+    <label class="cam-btn touch-only" for="pdfCamera"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h3l2-3h6l2 3h3a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1z"/><circle cx="12" cy="13.5" r="3.5"/></svg><span data-i18n="camBtn">Chụp ảnh bằng camera</span></label>
+    <input type="file" id="pdfCamera" class="file-hidden" accept="image/*" capture="environment">
 
     <div class="pdf-toolbar" id="pdfToolbar" style="display:none;">
-      <div class="pdf-count"><span id="pdfCount">0</span> <span data-i18n="pdfPages">trang</span><small data-i18n="pdfReorderHint">Kéo thả để đổi thứ tự trang</small></div>
+      <div class="pdf-count"><span id="pdfCount">0</span> <span data-i18n="pdfPages">trang</span><small class="no-touch" data-i18n="pdfReorderHint">Kéo thả để đổi thứ tự trang</small><small class="touch-only reorder-touch" data-i18n="pdfReorderTouch">Dùng ◀ ▶ để đổi thứ tự trang</small></div>
       <div class="pdf-tb-btns">
         <button type="button" class="copy-summary-btn" id="ocrRunBtn">🔤 <span data-i18n="ocrRun">Đọc chữ (OCR)</span></button>
         <button type="button" class="refresh-btn" id="pdfClearBtn">🗑 <span data-i18n="pdfClear">Xóa tất cả</span></button>
@@ -1330,7 +1358,7 @@
     <div class="pdf-status" id="pdfStatus"></div>
     <div class="card-actions">
       <button type="button" class="refresh-btn card-reset" id="pdfResetBtn">🔄 <span data-i18n="refreshBtn">Làm mới</span></button>
-      <button type="button" class="copy-summary-btn" id="pdfEmailBtn" disabled>✉ <span data-i18n="pdfEmail">Gửi email (Outlook)</span></button>
+      <button type="button" class="copy-summary-btn" id="pdfEmailBtn" disabled>✉ <span class="no-touch" data-i18n="pdfEmail">Gửi email (Outlook)</span><span class="touch-only" data-i18n="pdfShare">Gửi / Chia sẻ</span></button>
       <button type="button" class="primary" id="pdfExportBtn" disabled>⬇ <span data-i18n="pdfExport">Tải PDF</span></button>
     </div>
   </div>
@@ -1342,12 +1370,15 @@
   <div class="card">
     <h2><span class="step-num">1</span> <span data-i18n="xlImgStep1">Thêm ảnh có bảng</span></h2>
     <p class="sub" data-i18n="xlImgSub1">Mỗi ảnh xuất thành 1 sheet. Chữ được nhận dạng bằng OCR ngay trên trình duyệt, không tải lên máy chủ.</p>
-    <div class="pdf-drop" id="ixDrop" tabindex="0" role="button">
+    <label class="pdf-drop" id="ixDrop" for="ixInput" tabindex="0">
       <div class="pd-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 16V4"/><path d="M7 9l5-5 5 5"/><path d="M4 16v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3"/></svg></div>
-      <div class="pd-main" data-i18n="xlImgDrop">Kéo thả ảnh vào đây, hoặc bấm để chọn ảnh</div>
+      <div class="pd-main no-touch" data-i18n="xlImgDrop">Kéo thả ảnh vào đây, hoặc bấm để chọn ảnh</div>
+      <div class="pd-main touch-only" data-i18n="pdfDropTouch">Chạm để chọn ảnh từ thư viện</div>
       <div class="pd-sub" data-i18n="xlImgDropSub">Hoặc copy ảnh rồi nhấn <span class="kbd">Ctrl</span> + <span class="kbd">V</span>. Với ảnh từ Zalo: mở ảnh gốc rồi copy, đừng chụp màn hình khung chat (ảnh xem trước rất mờ).</div>
-    </div>
-    <input type="file" id="ixInput" accept="image/*" multiple hidden>
+    </label>
+    <input type="file" id="ixInput" class="file-hidden" accept="image/*" multiple>
+    <label class="cam-btn touch-only" for="ixCamera"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h3l2-3h6l2 3h3a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1z"/><circle cx="12" cy="13.5" r="3.5"/></svg><span data-i18n="camBtn">Chụp ảnh bằng camera</span></label>
+    <input type="file" id="ixCamera" class="file-hidden" accept="image/*" capture="environment">
     <div class="xl-files" id="ixFiles"></div>
     <div class="xl-opts">
       <label class="xl-check"><input type="checkbox" id="ixNum" checked> <span data-i18n="xlNumConv">Chuyển số thành dạng số trong Excel</span></label>
@@ -1388,12 +1419,13 @@
   <div class="card">
     <h2><span class="step-num">1</span> <span data-i18n="xlPdfStep1">Thêm file PDF</span></h2>
     <p class="sub" data-i18n="xlPdfSub1">Mỗi trang PDF xuất thành 1 sheet. Dùng tốt nhất với PDF xuất từ phần mềm (bôi đen copy được chữ).</p>
-    <div class="pdf-drop" id="pxDrop" tabindex="0" role="button">
+    <label class="pdf-drop" id="pxDrop" for="pxInput" tabindex="0">
       <div class="pd-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 16V4"/><path d="M7 9l5-5 5 5"/><path d="M4 16v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3"/></svg></div>
-      <div class="pd-main" data-i18n="xlPdfDrop">Kéo thả file PDF vào đây, hoặc bấm để chọn file</div>
+      <div class="pd-main no-touch" data-i18n="xlPdfDrop">Kéo thả file PDF vào đây, hoặc bấm để chọn file</div>
+      <div class="pd-main touch-only" data-i18n="xlPdfDropTouch">Chạm để chọn file PDF</div>
       <div class="pd-sub" data-i18n="xlPdfDropSub">Có thể chọn nhiều file cùng lúc. PDF dạng scan sẽ tự chuyển sang OCR.</div>
-    </div>
-    <input type="file" id="pxInput" accept="application/pdf,.pdf" multiple hidden>
+    </label>
+    <input type="file" id="pxInput" class="file-hidden" accept="application/pdf,.pdf" multiple>
     <div class="xl-files" id="pxFiles"></div>
     <div class="xl-opts">
       <label class="xl-check"><input type="checkbox" id="pxNum" checked> <span data-i18n="xlNumConv">Chuyển số thành dạng số trong Excel</span></label>
@@ -1631,6 +1663,32 @@ const translations = {
     refreshHint: 'Clear all entered information and go back to the top'
   }
 };
+/* ---------- Shared image loader: decode once, cap the long side (50MP phone photos -> ~5MP), free the original ---------- */
+const IMCD_IMG = {
+  load(file, maxSide){
+    return new Promise((resolve, reject) => {
+      if(/\.(heic|heif)$/i.test(file.name || '') || /heic|heif/i.test(file.type || '')){ reject(new Error('heic')); return; }
+      const url = URL.createObjectURL(file);
+      const img = new Image();
+      img.decoding = 'async';
+      img.onload = () => {
+        const w0 = img.naturalWidth, h0 = img.naturalHeight;
+        const k = Math.min(1, maxSide / Math.max(w0, h0));
+        const c = document.createElement('canvas');
+        c.width = Math.max(1, Math.round(w0 * k)); c.height = Math.max(1, Math.round(h0 * k));
+        const g = c.getContext('2d');
+        g.fillStyle = '#fff'; g.fillRect(0, 0, c.width, c.height);
+        g.imageSmoothingQuality = 'high';
+        g.drawImage(img, 0, 0, c.width, c.height);
+        URL.revokeObjectURL(url); img.src = '';
+        resolve(c);
+      };
+      img.onerror = () => { URL.revokeObjectURL(url); reject(new Error('decode')); };
+      img.src = url;
+    });
+  }
+};
+
 /* ---------- i18n: Image -> PDF (PO) view ---------- */
 Object.assign(translations.vi, {
   navPdf: '1. Ảnh → PDF',
@@ -1701,6 +1759,13 @@ Object.assign(translations.vi, {
   pdfRight: 'Ra sau',
   pdfDelete: 'Xóa trang',
   pdfEmail: 'Gửi email (Outlook)',
+  pdfShare: 'Gửi / Chia sẻ',
+  pdfReorderTouch: 'Dùng ◀ ▶ để đổi thứ tự trang',
+  shareDone: 'Đã mở mục chia sẻ. Chọn Outlook, Gmail hoặc Zalo để gửi file PDF.',
+  camBtn: 'Chụp ảnh bằng camera',
+  pdfDropTouch: 'Chạm để chọn ảnh từ thư viện',
+  xlPdfDropTouch: 'Chạm để chọn file PDF',
+  heicErr: 'Không đọc được ảnh HEIC. Trên Samsung: Camera > Cài đặt > Định dạng ảnh, tắt "Ảnh hiệu suất cao" (HEIF); hoặc chụp màn hình ảnh rồi chọn lại.',
   mailHello: 'Dear team,',
   mailBody: 'Gửi kèm file {name} ({pages} trang). Nhờ team kiểm tra và xử lý giúp.',
   mailThanks: 'Trân trọng,',
@@ -1787,6 +1852,13 @@ Object.assign(translations.en, {
   pdfRight: 'Move later',
   pdfDelete: 'Delete page',
   pdfEmail: 'Send email (Outlook)',
+  pdfShare: 'Send / Share',
+  pdfReorderTouch: 'Use ◀ ▶ to reorder pages',
+  shareDone: 'Share menu opened. Pick Outlook, Gmail or Zalo to send the PDF.',
+  camBtn: 'Take a photo',
+  pdfDropTouch: 'Tap to pick images from your gallery',
+  xlPdfDropTouch: 'Tap to pick PDF files',
+  heicErr: 'HEIC images cannot be read. On Samsung: Camera > Settings > Picture formats, turn off "High efficiency pictures" (HEIF); or screenshot the image and pick it again.',
   mailHello: 'Dear team,',
   mailBody: 'Please find attached {name} ({pages} pages) for your processing.',
   mailThanks: 'Best regards,',
@@ -2687,27 +2759,21 @@ recalcGP();
   setInterval(refreshPlaceholder, 30000);
 
   function loadImage(file){
-    return new Promise((resolve, reject) => {
-      const url = URL.createObjectURL(file);
-      const img = new Image();
-      img.onload = () => resolve({ url, img, w: img.naturalWidth, h: img.naturalHeight });
-      img.onerror = () => { URL.revokeObjectURL(url); reject(new Error('decode')); };
-      img.src = url;
-    });
+    return IMCD_IMG.load(file, MAX_PX).then(c => ({ url: '', img: c, w: c.width, h: c.height }));
   }
 
   async function addFiles(fileList){
-    const files = Array.from(fileList || []).filter(f => f && (f.type.startsWith('image/') || /\.(jpe?g|png|webp|gif|bmp)$/i.test(f.name || '')));
+    const files = Array.from(fileList || []).filter(f => f && (f.type.startsWith('image/') || /\.(jpe?g|png|webp|gif|bmp|heic|heif)$/i.test(f.name || '')));
     const skippedType = Array.from(fileList || []).length - files.length;
     if(!files.length){ if(skippedType) setStatus(fmt(t('pdfBadFile'), { n: skippedType }), 'err'); return; }
-    let ok = 0, bad = skippedType;
+    let ok = 0, bad = skippedType, heic = false;
     for(const f of files){
       try { const r = await loadImage(f); items.push({ id: ++seq, rot: 0, ...r }); ok++; }
-      catch(e){ bad++; }
+      catch(e){ bad++; if(e && e.message === 'heic') heic = true; }
     }
     render();
     let msg = ok ? fmt(t('pdfAdded'), { n: ok }) : '';
-    if(bad) msg += (msg ? ' ' : '') + fmt(t('pdfBadFile'), { n: bad });
+    if(bad) msg += (msg ? ' ' : '') + (heic ? t('heicErr') : fmt(t('pdfBadFile'), { n: bad }));
     setStatus(msg, bad && !ok ? 'err' : '');
     if(ok){ drop.classList.remove('paste-flash'); void drop.offsetWidth; drop.classList.add('paste-flash'); }
   }
@@ -2804,9 +2870,10 @@ recalcGP();
   });
 
   /* ---- Input: click / drop / paste ---- */
-  drop.addEventListener('click', () => fileInput.click());
   drop.addEventListener('keydown', e => { if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); fileInput.click(); } });
   fileInput.addEventListener('change', () => { addFiles(fileInput.files); fileInput.value = ''; });
+  const camInput = document.getElementById('pdfCamera');
+  camInput.addEventListener('change', () => { addFiles(camInput.files); camInput.value = ''; });
 
   const hasFiles = e => e.dataTransfer && Array.from(e.dataTransfer.types || []).includes('Files');
   let dragDepth = 0;
@@ -2929,6 +2996,7 @@ recalcGP();
 
   /* ---- Email: a draft .eml (X-Unsent) with the PDF attached; opening it shows an Outlook compose window ---- */
   const emailBtn = document.getElementById('pdfEmailBtn');
+  const isTouch = () => window.matchMedia && window.matchMedia('(hover: none) and (pointer: coarse)').matches;
   new MutationObserver(() => { emailBtn.disabled = exportBtn.disabled; }).observe(exportBtn, { attributes: true, attributeFilter: ['disabled'] });
 
   function b64(bytes){
@@ -2980,6 +3048,16 @@ recalcGP();
       const pages = items.map(toJpeg);
       const pdf = buildPdf(pages);
       const name = cleanName(nameInput.value);
+      if(isTouch()){
+        const file = new File([pdf], name, { type: 'application/pdf' });
+        if(navigator.canShare && navigator.canShare({ files: [file] })){
+          try {
+            await navigator.share({ files: [file], title: name.replace(/\.pdf$/i, ''), text: fmt(t('mailBody'), { name, pages: pages.length }) });
+            setStatus(t('shareDone'), 'ok');
+          } catch(e){ if(e && e.name !== 'AbortError') throw e; setStatus(''); }
+          return;
+        }
+      }
       const eml = buildEml(new Uint8Array(await pdf.arrayBuffer()), name, pages.length);
       const a = document.createElement('a');
       a.href = URL.createObjectURL(eml); a.download = name.replace(/\.pdf$/i, '') + '.eml';
@@ -3322,7 +3400,7 @@ const IMCD_OCR = (function(){
   /* grayscale, invert dark-mode screenshots, upscale small images (OCR needs ~25px+ text) */
   function prepare(src){
     const w0 = src.width, h0 = src.height;
-    const k = Math.max(w0, h0) < 1600 ? Math.min(3, 2600 / Math.max(w0, h0)) : 1;
+    const k = Math.max(w0, h0) < 1600 ? Math.min(3, 2600 / Math.max(w0, h0)) : Math.min(1, 2600 / Math.max(w0, h0));
     const c = document.createElement('canvas');
     const W = c.width = Math.round(w0 * k), H = c.height = Math.round(h0 * k);
     const g = c.getContext('2d');
@@ -3512,14 +3590,14 @@ const IMCD_PDF = (function(){
   const stamp = () => { const d = new Date(); return 'PO_' + d.getFullYear() + pad(d.getMonth() + 1) + pad(d.getDate()) + '_' + pad(d.getHours()) + pad(d.getMinutes()); };
   const escH = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 
-  function loadImg(file){
-    return new Promise((resolve, reject) => {
-      const url = URL.createObjectURL(file); const img = new Image();
-      img.onload = () => { const c = document.createElement('canvas'); c.width = img.naturalWidth; c.height = img.naturalHeight;
-        const g = c.getContext('2d'); g.fillStyle = '#fff'; g.fillRect(0, 0, c.width, c.height); g.drawImage(img, 0, 0); URL.revokeObjectURL(url); resolve(c); };
-      img.onerror = () => { URL.revokeObjectURL(url); reject(new Error('decode')); };
-      img.src = url;
-    });
+  function loadImg(file){ return IMCD_IMG.load(file, 2600); }
+
+  /* OCR on photos sometimes reads a thousands separator as a space: "479.277 000" -> "479.277.000" */
+  function fixOcrSpaces(v, loc){
+    const s = (v || '').trim();
+    if(!/^\d[\d.,\s]*\d$/.test(s) || !/\s/.test(s)) return v;
+    const sep = loc === 'us' ? ',' : '.';
+    return s.replace(/\s+(?=\d{3}(?:[.,]|$))/g, sep).replace(/\s+/g, '');
   }
 
   /* OCR often reads the small VN decimal comma as a dot: 798.795.00 -> 798.795,00 ; 600.0000 -> 600,0000 */
@@ -3539,7 +3617,7 @@ const IMCD_PDF = (function(){
     const isActive = () => view.classList.contains('active');
     const setStatus = (msg, kind) => { statusEl.textContent = msg || ''; statusEl.className = 'pdf-status' + (kind ? ' ' + kind : ''); };
     const accepts = f => mode === 'img'
-      ? (f.type.startsWith('image/') || /\.(jpe?g|png|webp|gif|bmp)$/i.test(f.name || ''))
+      ? (f.type.startsWith('image/') || /\.(jpe?g|png|webp|gif|bmp|heic|heif)$/i.test(f.name || ''))
       : (f.type === 'application/pdf' || /\.pdf$/i.test(f.name || ''));
 
     function addFiles(list){
@@ -3579,7 +3657,7 @@ const IMCD_PDF = (function(){
             f.status = 'done';
           } catch(err){
             f.status = 'err';
-            f.err = err && err.message === 'NET' ? t('xlNetErr') : (err && err.message === 'decode' ? t('pdfBadFile').replace('{n}', '1') : String((err && err.message) || err));
+            f.err = err && err.message === 'NET' ? t('xlNetErr') : err && err.message === 'heic' ? t('heicErr') : (err && err.message === 'decode' ? t('pdfBadFile').replace('{n}', '1') : String((err && err.message) || err));
           }
           renderFiles(); renderSheets();
         }
@@ -3629,6 +3707,7 @@ const IMCD_PDF = (function(){
         else if(done.length === 1) name = t('ocrPage') + ' ' + (i + 1);
         else name = base(f.name).slice(0, 22) + (f.pages.length > 1 ? '_p' + (i + 1) : '');
         const loc = locSel.value === 'auto' ? IMCD_GRID.detectLocale(rows) : locSel.value;
+        if(f.ocr) rows = rows.map(r => r.map(v => fixOcrSpaces(v, loc)));
         if(f.ocr && loc === 'vn') rows = rows.map(r => r.map(fixOcrVn));
         const conv = rows.map(r => r.map(v => { if(!numCb.checked) return v; const n = IMCD_GRID.toNumber(v, loc); return n === null ? v : n; }));
         out.push({ name, rows: conv, raw: rows });
@@ -3698,9 +3777,10 @@ const IMCD_PDF = (function(){
       if(isActive() && (e.ctrlKey || e.metaKey) && (e.key === 's' || e.key === 'S') && !exportBtn.disabled){ e.preventDefault(); exportXlsx(); }
     });
 
-    drop.addEventListener('click', () => input.click());
     drop.addEventListener('keydown', e => { if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); input.click(); } });
     input.addEventListener('change', () => { addFiles(input.files); input.value = ''; });
+    const cam = $('Camera');
+    if(cam) cam.addEventListener('change', () => { addFiles(cam.files); cam.value = ''; });
     const hasFiles = e => e.dataTransfer && Array.from(e.dataTransfer.types || []).includes('Files');
     let depth = 0;
     window.addEventListener('dragenter', e => { if(isActive() && hasFiles(e)){ depth++; drop.classList.add('drag-over'); } });
